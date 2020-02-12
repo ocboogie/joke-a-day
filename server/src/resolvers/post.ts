@@ -17,6 +17,7 @@ import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
 import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
+import vote from "./vote";
 
 @Resolver(of => Post)
 export default class {
@@ -61,17 +62,7 @@ export default class {
 
   @FieldResolver(type => Number)
   async upvotes(@Root() post: Post): Promise<number> {
-    const upvotes = Number(
-      (
-        await this.voteRepository
-          .createQueryBuilder()
-          .select("COALESCE(SUM(Vote.vote), 0)", "upvotes")
-          .where('"Vote"."postId" = :postId', { postId: post.id })
-          .getRawOne()
-      ).upvotes
-    );
-
-    return upvotes;
+    return post.upvotes;
   }
 
   @FieldResolver(type => Number)
