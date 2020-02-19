@@ -6,6 +6,8 @@
 </template>
 
 <style lang="scss">
+@import "~typeface-roboto/index.css";
+
 body,
 html {
   padding: 0;
@@ -21,7 +23,7 @@ html {
 }
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: roboto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
