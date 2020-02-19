@@ -30,6 +30,10 @@ html {
   color: #2c3e50;
 }
 
+.header {
+  font-weight: 300;
+}
+
 #nav {
   padding: 30px;
 

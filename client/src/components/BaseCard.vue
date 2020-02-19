@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ paddingless }" class="card"><slot /></div>
+  <div :class="{ paddingless }" class="card">
+    <h1 v-if="$slots.header" class="header"><slot name="header" /></h1>
+    <slot />
+  </div>
 </template>
 <script>
 export default {
@@ -20,6 +23,10 @@ export default {
   border: 1px solid $border-lighter-color;
   background-color: $white;
   color: $text-primary-color;
+  .header {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
   &.paddingless {
     padding: 0rem;
   }

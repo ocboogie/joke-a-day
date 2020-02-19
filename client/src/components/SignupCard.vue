@@ -1,6 +1,6 @@
 <template>
   <BaseCard class="signup-card">
-    <h1 class="header">SignUp</h1>
+    <template slot="header">SignUp</template>
     <form @submit.prevent="submit">
       <BaseInput
         class="form-input"
@@ -57,16 +57,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.signup-card {
-  .header {
-    font-weight: 300;
-    margin-top: 0;
-    margin-bottom: 0.75rem;
-  }
-  .form-input {
-    width: 100%;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
+.form-input {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 </style>
