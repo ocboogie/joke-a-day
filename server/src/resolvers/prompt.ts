@@ -38,8 +38,13 @@ export default class {
   }
 
   @Query(returns => [Prompt])
-  async prompts() {
+  prompts() {
     return this.promptRepository.find();
+  }
+
+  @Query(returns => Prompt, { nullable: true })
+  prompt(@Arg("id") id: string) {
+    return this.promptRepository.findOne(id);
   }
 
   @Query(returns => Prompt)
@@ -53,16 +58,16 @@ export default class {
   }
 
   @Subscription({
-    topics: "POST_NEW",
-    filter: ({ args, payload }) => payload.promptId !== args.promptId
+    topics: "POST_ADDED",
+    filter: ({ args, payload }) => payload.promptId === args.promptId
   })
-  postNew(@Root() newPost: Post, @Arg("promptId") promptId: string): Post {
+  postAdded(@Root() newPost: Post, @Arg("promptId") promptId: string): Post {
     return newPost;
   }
 
   @Subscription({
     topics: "POST_UPDATED",
-    filter: ({ args, payload }) => payload.promptId !== args.promptId
+    filter: ({ args, payload }) => payload.promptId === args.promptId
   })
   postUpdated(
     @Root() updatedPost: Post,

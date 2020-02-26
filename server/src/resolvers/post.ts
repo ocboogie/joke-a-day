@@ -36,7 +36,7 @@ export default class {
     @Arg("promptId") promptId: string,
     @Arg("content") content: string,
     @CurrentUser() user: User,
-    @PubSub("POST_NEW") publish: Publisher<Post>
+    @PubSub("POST_ADDED") publish: Publisher<Post>
   ) {
     const prompt = await this.promptRepository.findOne(promptId);
 
@@ -50,7 +50,7 @@ export default class {
     }
 
     const post = this.postRepository.create({
-      prompt: { id: promptId },
+      promptId,
       author: user,
       content
     });

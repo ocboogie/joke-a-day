@@ -41,6 +41,7 @@ input PromptInfo {
 
 type Query {
   prompts: [Prompt!]!
+  prompt(id: String!): Prompt
   currentPrompt: Prompt!
   signedIn: Boolean!
 }
@@ -51,7 +52,7 @@ type Session {
 }
 
 type Subscription {
-  postNew(promptId: String!): Post!
+  postAdded(promptId: String!): Post!
   postUpdated(promptId: String!): Post!
 }
 
