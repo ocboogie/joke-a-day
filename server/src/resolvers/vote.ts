@@ -45,7 +45,7 @@ export default class {
       post: { id: postId },
       voter: user
     });
-    await this.voteRepository.insert(vote);
+    await this.voteRepository.save(vote);
     return post;
   }
 
@@ -66,7 +66,7 @@ export default class {
     @CurrentUser() user: User,
     @PubSub("POST_UPDATED") publish: Publisher<Post>
   ) {
-    const post = await this.vote(postId, user, 1);
+    const post = await this.vote(postId, user, -1);
     publish(post);
     return post;
   }
