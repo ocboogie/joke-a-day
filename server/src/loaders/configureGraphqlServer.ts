@@ -26,8 +26,25 @@ export default async () => {
 
   const server = new ApolloServer({
     schema,
-    // TODO: This might not be necessary
-    context: ({ req, res }) => ({ req, res })
+    // HACKY: This whole area I don't fully understand but hey it works.
+    // This is done to get the request and cookies when in a subscription
+    // resolver.
+    context: ctx => ctx.connection?.context || ctx,
+    subscriptions: {
+      async onConnect(connectionParams, webSocket) {
+        // webSocket.upgradeReq isn't ran through the express middleware
+        // so we have to do it manually
+        const req = await new Promise(resolve => {
+          // @ts-ignore
+          cookieParser()(webSocket.upgradeReq, {}, () => {
+            // @ts-ignore
+            resolve(webSocket.upgradeReq);
+          });
+        });
+
+        return { req };
+      }
+    }
   });
 
   const app = express();
