@@ -9,6 +9,10 @@ import Session from "../models/Session";
 import User from "../models/User";
 
 async function getUserFromContext(context: Context) {
+  if (context.user) {
+    return context.user;
+  }
+
   const { sessionId } = context.req.cookies;
 
   if (!sessionId) {
