@@ -18,13 +18,6 @@ import Vote from "./Vote";
 @ObjectType()
 @Entity()
 export default class Post {
-  static BaseSelector(postRepository: Repository<Post>) {
-    return postRepository
-      .createQueryBuilder()
-      .select()
-      .addSelect("COALESCE(SUM(`votes`.`vote`), 0)", "upvotes");
-  }
-
   @Field()
   @PrimaryGeneratedColumn("uuid")
   id: string;
