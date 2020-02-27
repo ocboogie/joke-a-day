@@ -30,8 +30,9 @@ async function createSession(
   sessionRepository: Repository<Session>,
   user: User,
   rememberMe: boolean = false
-): Promise<Session> {
+): Promise<[Session, string]> {
   const id = crypto.randomBytes(32).toString("hex");
+  const hashedId = Session.hashSessionId(id);
 
   const expires = new Date();
 
@@ -42,19 +43,20 @@ async function createSession(
         : config.sessionLifetimeDays)
   );
 
-  const session = sessionRepository.create({ id, user, expires });
+  const session = sessionRepository.create({ id: hashedId, user, expires });
 
   await sessionRepository.insert(session);
 
-  return session;
+  return [session, id];
 }
 
 async function saveSession(
   res: Response,
   session: Session,
+  sessionId: string,
   rememberMe: boolean = false
 ) {
-  res.cookie("sessionId", session.id, {
+  res.cookie("sessionId", sessionId, {
     // TODO: Test when "rememberMe" is flase if the cookie will be a session cookie
     expires: rememberMe ? session.expires : undefined,
     httpOnly: true,
@@ -72,7 +74,7 @@ export default class {
     @Inject("logger") private logger: typeof LoggerInstance
   ) {}
 
-  @Mutation(returns => Session)
+  @Mutation(returns => String)
   async signUp(@Arg("user") userInput: UserInfo, @Ctx() { res }: Context) {
     this.logger.silly(`Creating a new user: ${userInput.email}`);
 
@@ -94,15 +96,19 @@ export default class {
       throw err;
     }
 
-    const session = await createSession(this.sessionRepository, user, true);
-    saveSession(res, session, true);
+    const [session, sessionId] = await createSession(
+      this.sessionRepository,
+      user,
+      true
+    );
+    saveSession(res, session, sessionId, true);
 
     this.logger.silly(`Created a new user: ${userInput.email}`, { user });
 
-    return session;
+    return sessionId;
   }
 
-  @Mutation(returns => Session)
+  @Mutation(returns => String)
   async login(
     @Arg("user") { email, password, rememberMe }: UserLogin,
     @Ctx() { res }: Context
@@ -123,14 +129,14 @@ export default class {
       throw new UnauthorizedError();
     }
 
-    const session = await createSession(
+    const [session, sessionId] = await createSession(
       this.sessionRepository,
       user,
-      rememberMe
+      true
     );
-    saveSession(res, session, rememberMe);
+    saveSession(res, session, sessionId, rememberMe);
 
-    return session;
+    return sessionId;
   }
 
   @Mutation(returns => Boolean)

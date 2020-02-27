@@ -19,9 +19,11 @@ async function getUserFromContext(context: Context) {
     return;
   }
 
+  const hashedSessionId = Session.hashSessionId(sessionId);
+
   const sessionRepository = getRepository(Session);
   const session = await sessionRepository.findOne(
-    { id: sessionId },
+    { id: hashedSessionId },
     { relations: ["user"] }
   );
 

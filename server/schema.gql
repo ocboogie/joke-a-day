@@ -11,8 +11,8 @@ scalar DateTime
 type Mutation {
   createPost(content: String!, promptId: String!): Post!
   createPrompt(prompt: PromptInfo!): Prompt!
-  signUp(user: UserInfo!): Session!
-  login(user: UserLogin!): Session!
+  signUp(user: UserInfo!): String!
+  login(user: UserLogin!): String!
   signOut: Boolean!
   upvote(postId: String!): Post!
   downvote(postId: String!): Post!
@@ -42,7 +42,7 @@ input PromptInfo {
 type Query {
   prompts: [Prompt!]!
   prompt(id: String!): Prompt
-  currentPrompt: Prompt!
+  currentPrompt: Prompt
   signedIn: Boolean!
 }
 

@@ -47,7 +47,7 @@ export default class {
     return this.promptRepository.findOne(id);
   }
 
-  @Query(returns => Prompt)
+  @Query(returns => Prompt, { nullable: true })
   currentPrompt() {
     // TODO: Make sure this is current with the whole time zone thing
     const today = new Date(Date.now());
