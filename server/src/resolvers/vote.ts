@@ -70,4 +70,27 @@ export default class {
     publish(post);
     return post;
   }
+
+  @Mutation(returns => Post)
+  async unvote(
+    @Arg("postId") postId: string,
+    @CurrentUser() user: User,
+    @PubSub("POST_UPDATED") publish: Publisher<Post>
+  ) {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ["prompt"]
+    });
+    if (!post) {
+      // FIXME:
+      throw new Error("Post not found");
+    }
+    if (!(await post.prompt).isCurrent()) {
+      // FIXME:
+      throw new Error("Prompt is not active");
+    }
+    await this.voteRepository.delete({ post: post, voter: user });
+    publish(post);
+    return post;
+  }
 }

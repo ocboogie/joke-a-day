@@ -16,6 +16,7 @@ type Mutation {
   signOut: Boolean!
   upvote(postId: String!): Post!
   downvote(postId: String!): Post!
+  unvote(postId: String!): Post!
 }
 
 type Post {
