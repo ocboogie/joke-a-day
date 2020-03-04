@@ -1,10 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav"><router-link to="/">Home</router-link> |</div>
+    <div id="nav">
+      <NavButton>
+        I
+      </NavButton>
+    </div>
     <router-view />
   </div>
 </template>
+<script>
+import NavButton from "./components/NavButton.vue";
 
+export default {
+  components: {
+    NavButton
+  }
+};
+</script>
 <style lang="scss">
 @import "~typeface-roboto/index.css";
 
@@ -28,6 +40,9 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  max-width: 992px;
+  padding: 10px;
+  margin: auto;
 }
 
 .header {

@@ -10,6 +10,7 @@ import { getMainDefinition } from "apollo-utilities";
 
 // HTTP connection to the API
 const httpLink = new HttpLink({
+  credentials: "include",
   // You should use an absolute URL here
   uri: process.env.VUE_APP_GRAPHQL_HTTP
 });

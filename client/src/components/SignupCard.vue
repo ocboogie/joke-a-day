@@ -41,9 +41,7 @@ export default {
           mutation($username: String!, $email: String!, $password: String!) {
             signUp(
               user: { name: $username, email: $email, password: $password }
-            ) {
-              id
-            }
+            )
           }
         `,
         variables: {

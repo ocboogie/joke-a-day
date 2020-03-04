@@ -2,7 +2,7 @@
   <BaseCard paddingless class="post">
     <div class="upvotes">
       <button
-        :class="{ 'is-selected': vote > 0 }"
+        :class="{ 'is-selected': userVote > 0 }"
         class="arrow upvote"
         @click="upvote"
       >
@@ -18,7 +18,7 @@
       </button>
       {{ upvotes }}
       <button
-        :class="{ 'is-selected': vote < 0 }"
+        :class="{ 'is-selected': userVote < 0 }"
         class="arrow downvote"
         @click="downvote"
       >
@@ -40,6 +40,8 @@
   </BaseCard>
 </template>
 <script>
+import gql from "graphql-tag";
+
 export default {
   props: {
     upvotes: {
@@ -55,26 +57,42 @@ export default {
       required: true
     },
     id: {
-      type: Number,
+      type: String,
       required: true
     },
-    vote: {
+    userVote: {
       type: Number,
       default: 0
     }
   },
   methods: {
     upvote() {
-      // this.voteForPost({
-      //   id: this.id,
-      //   vote: this.vote === "upvote" ? "none" : "upvote"
-      // });
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postId: String!) {
+            upvote(postId: $postId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          postId: this.id
+        }
+      });
     },
     downvote() {
-      // this.voteForPost({
-      //   id: this.id,
-      //   vote: this.vote === "downvote" ? "none" : "downvote"
-      // });
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postId: String!) {
+            downvote(postId: $postId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          postId: this.id
+        }
+      });
     }
   }
 };

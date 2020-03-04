@@ -1,6 +1,8 @@
 <template>
   <div :class="{ paddingless }" class="card">
-    <h1 v-if="$slots.header" class="header"><slot name="header" /></h1>
+    <h1 v-if="$slots.header" class="header">
+      <slot name="header" />
+    </h1>
     <slot />
   </div>
 </template>
@@ -17,10 +19,9 @@ export default {
 
 <style lang="scss" scoped>
 .card {
+  @include card-styling;
   padding: 1rem;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  border: 1px solid $border-lighter-color;
   background-color: $white;
   color: $text-primary-color;
   .header {
