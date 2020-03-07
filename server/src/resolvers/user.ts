@@ -140,7 +140,7 @@ export default class {
   }
 
   @Mutation(returns => Boolean)
-  async signOut(@Ctx() { req }: Context) {
+  async logout(@Ctx() { req }: Context) {
     const { sessionId } = req.cookies;
     if (!sessionId) {
       return false;

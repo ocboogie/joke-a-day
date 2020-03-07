@@ -13,7 +13,7 @@ type Mutation {
   createPrompt(prompt: PromptInfo!): Prompt!
   signUp(user: UserInfo!): String!
   login(user: UserLogin!): String!
-  signOut: Boolean!
+  logout: Boolean!
   upvote(postId: String!): Post!
   downvote(postId: String!): Post!
   unvote(postId: String!): Post!
