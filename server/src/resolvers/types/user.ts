@@ -1,6 +1,6 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 import { Length, IsEmail } from "class-validator";
-import { maxNameLength } from "../../models/User";
+import User, { maxNameLength } from "../../models/User";
 
 @InputType()
 export class UserCredentials {
@@ -24,4 +24,13 @@ export class UserInfo extends UserCredentials {
 export class UserLogin extends UserCredentials {
   @Field()
   rememberMe: boolean = false;
+}
+
+@ObjectType()
+export class LoginResult {
+  @Field()
+  sessionId: string;
+
+  @Field()
+  user: User;
 }

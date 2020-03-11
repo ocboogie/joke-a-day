@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
-import { UserInfo, UserLogin } from "./types/user";
+import { UserInfo, UserLogin, LoginResult } from "./types/user";
 import Session from "../models/Session";
 import User from "../models/User";
 import config from "../config";
@@ -74,7 +74,7 @@ export default class {
     @Inject("logger") private logger: typeof LoggerInstance
   ) {}
 
-  @Mutation(returns => String)
+  @Mutation(returns => LoginResult)
   async signUp(@Arg("user") userInput: UserInfo, @Ctx() { res }: Context) {
     this.logger.silly(`Creating a new user: ${userInput.email}`);
 
@@ -105,10 +105,13 @@ export default class {
 
     this.logger.silly(`Created a new user: ${userInput.email}`, { user });
 
-    return sessionId;
+    return {
+      user,
+      sessionId
+    };
   }
 
-  @Mutation(returns => String)
+  @Mutation(returns => LoginResult)
   async login(
     @Arg("user") { email, password, rememberMe }: UserLogin,
     @Ctx() { res }: Context
@@ -136,7 +139,10 @@ export default class {
     );
     saveSession(res, session, sessionId, rememberMe);
 
-    return sessionId;
+    return {
+      user,
+      sessionId
+    };
   }
 
   @Mutation(returns => Boolean)
@@ -148,6 +154,22 @@ export default class {
     await this.sessionRepository.delete({ id: sessionId });
 
     return true;
+  }
+
+  @Mutation(returns => User)
+  async changeUsername(
+    @CurrentUser() user: User,
+    @Arg("userId") userId: string,
+    @Arg("username") username: string
+  ) {
+    if (!user.canModify(userId)) {
+      throw new UnauthorizedError();
+    }
+
+    user.name = username;
+    this.userRepository.save(user);
+
+    return user;
   }
 
   @Query(returns => Boolean)

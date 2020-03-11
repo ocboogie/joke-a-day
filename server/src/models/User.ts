@@ -60,4 +60,8 @@ export default class User {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  canModify(userId: string): boolean {
+    return userId == this.id || this.admin;
+  }
 }
