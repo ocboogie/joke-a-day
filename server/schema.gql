@@ -51,6 +51,7 @@ type Query {
   prompt(id: String!): Prompt
   currentPrompt: Prompt
   signedIn: Boolean!
+  me: User!
 }
 
 type Session {

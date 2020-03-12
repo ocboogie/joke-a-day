@@ -176,4 +176,9 @@ export default class {
   signedIn(@CurrentUser(false) user: User) {
     return Boolean(user);
   }
+
+  @Query(returns => User)
+  me(@CurrentUser(true) user: User) {
+    return user;
+  }
 }
