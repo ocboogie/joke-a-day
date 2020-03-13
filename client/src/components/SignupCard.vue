@@ -1,6 +1,6 @@
 <template>
   <BaseCard class="signup-card">
-    <template slot="header">SignUp</template>
+    <template slot="header">Sign Up</template>
     <form @submit.prevent="submit">
       <BaseInput
         class="form-input"
@@ -24,7 +24,7 @@
         autocomplete="current-password"
       />
       <BaseButton class="form-input" native-type="submit">
-        Signup
+        Sign Up
       </BaseButton>
     </form>
   </BaseCard>
@@ -35,13 +35,24 @@ import gql from "graphql-tag";
 export default {
   data: () => ({ username: "", email: "", password: "" }),
   methods: {
-    submit() {
-      this.$apollo.mutate({
+    async submit() {
+      // TODO: Handle errors
+      const {
+        data: {
+          signUp: {
+            user: { id }
+          }
+        }
+      } = await this.$apollo.mutate({
         mutation: gql`
           mutation($username: String!, $email: String!, $password: String!) {
             signUp(
               user: { name: $username, email: $email, password: $password }
-            )
+            ) {
+              user {
+                id
+              }
+            }
           }
         `,
         variables: {
@@ -50,6 +61,10 @@ export default {
           password: this.password
         }
       });
+      this.$root.meId = id;
+      // This dosen't need to be "true" but we need to put something there
+      localStorage.setItem("meId", id);
+      this.$router.replace({ name: "home" });
     }
   }
 };

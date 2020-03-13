@@ -4,21 +4,7 @@
       Loading...
     </template>
     <template v-else-if="currentPromptId">
-      <prompt v-if="currentPromptId" :id="currentPromptId" />
-      <!-- TODO: Move to its own component and stylize it -->
-      <modal name="create-post" class="create-post">
-        <h1 class="header">Create Post</h1>
-
-        <form @submit.prevent="createPost">
-          <base-input v-model="postContent" class="content-input" />
-          <base-button native-type="submit" class="post-button"
-            >Post</base-button
-          >
-        </form>
-      </modal>
-      <button @click="$modal.show('create-post')">
-        Create post
-      </button>
+      <prompt active v-if="currentPromptId" :id="currentPromptId" />
     </template>
     <template v-else>
       No prompt today. Please email boogie@mikulec.com
@@ -35,25 +21,7 @@ export default {
   components: {
     Prompt
   },
-  data: () => ({ currentPromptId: null, postContent: "" }),
-  methods: {
-    createPost() {
-      this.$apollo.mutate({
-        mutation: gql`
-          mutation($postContent: String!, $promptId: String!) {
-            createPost(content: $postContent, promptId: $promptId) {
-              id
-            }
-          }
-        `,
-        variables: {
-          postContent: this.postContent,
-          promptId: this.currentPromptId
-        }
-      });
-    }
-  },
-
+  data: () => ({ currentPromptId: null }),
   apollo: {
     currentPromptId: {
       query: gql`
@@ -69,9 +37,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.create-post {
-  .header {
-    text-align: center;
-  }
+.home {
+  text-align: center;
 }
 </style>

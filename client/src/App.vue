@@ -1,27 +1,27 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <NavButton>
-        I
-      </NavButton>
-    </div>
-    <router-view />
-  </div>
+  <el-container>
+    <el-header>
+      <Navbar />
+    </el-header>
+    <el-main>
+      <router-view />
+    </el-main>
+  </el-container>
 </template>
 <script>
-import NavButton from "./components/NavButton.vue";
+import Navbar from "./components/Navbar.vue";
 
 export default {
   components: {
-    NavButton
+    Navbar
   }
 };
 </script>
 <style lang="scss">
-@import "~typeface-roboto/index.css";
-
 body,
 html {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   padding: 0;
   margin: 0;
 }
@@ -32,33 +32,5 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
-}
-
-#app {
-  font-family: roboto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  max-width: 992px;
-  padding: 10px;
-  margin: auto;
-}
-
-.header {
-  font-weight: 300;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>

@@ -5,6 +5,7 @@
         :class="{ 'is-selected': userVote > 0 }"
         class="arrow upvote"
         @click="upvote"
+        v-if="active"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 15">
           <path
@@ -21,6 +22,7 @@
         :class="{ 'is-selected': userVote < 0 }"
         class="arrow downvote"
         @click="downvote"
+        v-if="active"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 15">
           <path
@@ -33,9 +35,15 @@
         </svg>
       </button>
     </div>
-    <div class="body">{{ content }}</div>
-    <div class="author">
-      <div class="name-container">{{ author.name }}</div>
+    <div class="body">
+      <div class="post-content">{{ content }}</div>
+      <div class="author">
+        By
+        <!-- TODO: Stylize this  -->
+        <router-link :to="{ name: 'user', params: { userId: author.id } }">
+          {{ author.name }}
+        </router-link>
+      </div>
     </div>
   </BaseCard>
 </template>
@@ -63,10 +71,18 @@ export default {
     userVote: {
       type: Number,
       default: 0
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     upvote() {
+      if (this.userVote > 0) {
+        this.unvote();
+        return;
+      }
       this.$apollo.mutate({
         mutation: gql`
           mutation($postId: String!) {
@@ -81,10 +97,28 @@ export default {
       });
     },
     downvote() {
+      if (this.userVote < 0) {
+        this.unvote();
+        return;
+      }
       this.$apollo.mutate({
         mutation: gql`
           mutation($postId: String!) {
             downvote(postId: $postId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          postId: this.id
+        }
+      });
+    },
+    unvote() {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postId: String!) {
+            unvote(postId: $postId) {
               id
             }
           }
@@ -166,17 +200,8 @@ $arrowCircleSize: 31.25px;
     flex-grow: 1;
   }
   .author {
-    max-width: 110px;
-    text-align: center;
-    padding-right: 5px;
-    .name-container {
-      margin-top: 0.1rem;
-      width: 100%;
-      height: 100%;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
+    font-size: 14px;
+    font-weight: 300;
   }
 }
 </style>

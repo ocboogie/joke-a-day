@@ -1,7 +1,12 @@
 <template>
   <div class="posts">
     <transition-group name="post-list">
-      <Post v-for="post in posts" :key="post.id" v-bind="post" />
+      <Post
+        v-for="post in sorted"
+        :key="post.id"
+        :active="active"
+        v-bind="post"
+      />
     </transition-group>
   </div>
 </template>
@@ -12,10 +17,22 @@ export default {
   components: {
     Post
   },
+  computed: {
+    sorted() {
+      // This is done to prevent side effects
+      const clonedPosts = this.posts.slice();
+
+      return clonedPosts.sort((postA, postB) => postB.upvotes - postA.upvotes);
+    }
+  },
   props: {
     posts: {
       type: Array,
       required: true
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   }
 };

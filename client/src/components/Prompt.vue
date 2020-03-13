@@ -1,30 +1,64 @@
 <template>
   <div class="prompt" v-if="prompt">
     <InfoDisplay :prompt="prompt.content" />
-    <Divider />
-    <!-- <post-form full-width class="post-form" /> -->
-    <Posts :promptId="id" :posts="prompt.posts" />
+    <base-button
+      v-if="active"
+      class="create-post"
+      @click.native="openPostCreation"
+    >
+      Create post
+    </base-button>
+    <el-divider><div class="circle-in-divider"/></el-divider>
+    <Posts :active="active" :promptId="id" :posts="prompt.posts" />
   </div>
 </template>
 <script>
 import gql from "graphql-tag";
 import Posts from "./Posts.vue";
-import Divider from "./Divider.vue";
 import InfoDisplay from "./InfoDisplay.vue";
 
 export default {
   components: {
     Posts,
-    Divider,
     InfoDisplay
   },
   props: {
     id: {
       type: String,
       requried: true
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({ prompt: null }),
+  methods: {
+    openPostCreation() {
+      this.$prompt("What do you want to say?", {
+        confirmButtonText: "Post",
+        cancelButtonText: "Cancel",
+        inputErrorMessage: "Invalid post"
+      }).then(({ value }) => {
+        this.createPost(value);
+      });
+    },
+    createPost(postContent) {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postContent: String!, $promptId: String!) {
+            createPost(content: $postContent, promptId: $promptId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          postContent,
+          promptId: this.id
+        }
+      });
+    }
+  },
   apollo: {
     prompt: {
       query: gql`
@@ -37,6 +71,7 @@ export default {
               content
               author {
                 name
+                id
               }
               upvotes
               userVote
@@ -56,6 +91,7 @@ export default {
                 content
                 author {
                   name
+                  id
                 }
                 upvotes
                 userVote
@@ -85,6 +121,7 @@ export default {
                 content
                 author {
                   name
+                  id
                 }
                 upvotes
                 userVote
@@ -107,3 +144,17 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.prompt {
+  .create-post {
+    display: block;
+    margin-left: auto;
+  }
+  .circle-in-divider {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $border-lighter-color;
+  }
+}
+</style>

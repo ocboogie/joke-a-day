@@ -28,11 +28,22 @@ import gql from "graphql-tag";
 export default {
   data: () => ({ email: "", password: "" }),
   methods: {
-    submit() {
-      this.$apollo.mutate({
+    async submit() {
+      // TODO: Handle errors
+      const {
+        data: {
+          login: {
+            user: { id }
+          }
+        }
+      } = await this.$apollo.mutate({
         mutation: gql`
           mutation($email: String!, $password: String!) {
-            login(user: { email: $email, password: $password })
+            login(user: { email: $email, password: $password }) {
+              user {
+                id
+              }
+            }
           }
         `,
         variables: {
@@ -40,6 +51,12 @@ export default {
           password: this.password
         }
       });
+      console.log(id);
+      // TODO: Factor out the similar logic in SignupCard
+      this.$root.meId = id;
+      // This dosen't need to be "true" but we need to put something there
+      localStorage.setItem("meId", id);
+      this.$router.replace({ name: "home" });
     }
   }
 };
