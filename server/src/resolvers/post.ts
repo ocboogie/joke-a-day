@@ -15,6 +15,7 @@ import {
 } from "type-graphql";
 import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
+import PromptRepo from "../customRepos/Prompt";
 import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 import vote from "./vote";
@@ -24,8 +25,8 @@ export default class {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    @InjectRepository(Prompt)
-    private readonly promptRepository: Repository<Prompt>,
+    @InjectRepository(PromptRepo)
+    private readonly promptRepository: PromptRepo,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
     @Inject("logger") private logger: typeof LoggerInstance

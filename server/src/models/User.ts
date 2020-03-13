@@ -3,7 +3,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
-  CreateDateColumn
+  CreateDateColumn,
+  ManyToMany
 } from "typeorm";
 
 import Session from "./Session";
@@ -43,9 +44,9 @@ export default class User {
   sessions: Lazy<Session[]>;
 
   @Field(type => [Prompt])
-  @OneToMany(
+  @ManyToMany(
     type => Prompt,
-    prompt => prompt.winner,
+    prompt => prompt.winners,
     { lazy: true }
   )
   wins: Lazy<Prompt[]>;

@@ -16,6 +16,7 @@ type LoginResult {
 type Mutation {
   createPost(content: String!, promptId: String!): Post!
   createPrompt(prompt: PromptInfo!): Prompt!
+  manuallyFinishRound: Boolean!
   signUp(user: UserInfo!): LoginResult!
   login(user: UserLogin!): LoginResult!
   logout: Boolean!
@@ -37,8 +38,9 @@ type Prompt {
   id: String!
   content: String!
   scheduled: String!
+  active: Boolean!
   posts: [Post!]!
-  winner: User!
+  winners: [User!]!
 }
 
 input PromptInfo {

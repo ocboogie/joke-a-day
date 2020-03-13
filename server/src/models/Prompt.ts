@@ -3,7 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany
+  OneToMany,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
@@ -44,6 +46,10 @@ export default class Prompt {
   @Column({ type: "date" })
   scheduled: string;
 
+  @Field()
+  @Column({ default: true })
+  active: boolean;
+
   @Field(type => [Post])
   @OneToMany(
     type => Post,
@@ -52,12 +58,50 @@ export default class Prompt {
   )
   posts: Lazy<Post[]>;
 
-  @Field(type => User)
-  @ManyToOne(type => User, { nullable: true })
-  winner?: User;
+  @Field(type => [User])
+  @ManyToMany(
+    type => User,
+    user => user.wins,
+    { lazy: true }
+  )
+  @JoinTable()
+  winners: Lazy<User[]>;
 
   public isCurrent(): boolean {
     const today = Prompt.ScheduleDateFormat(new Date(Date.now()));
-    return this.scheduled === today;
+    return this.scheduled === today && this.active;
+  }
+
+  /**
+   * Return the authors of the highest upvoted posts. Typically, this should
+   * return one user but if there are multiple posts tied for first then this
+   * returns an array of users.
+   *
+   * @returns the winner(s) of this prompt and undefied if there aren't any posts
+   */
+  public async computeWinners() {
+    const posts = await this.posts;
+
+    if (!posts.length) {
+      return;
+    }
+
+    let max = -Infinity;
+    const winners: Set<User> = new Set();
+
+    await Promise.all(
+      posts.map(async post => {
+        const upvotes = await post.upvotes;
+        if (upvotes > max) {
+          winners.clear();
+          max = upvotes;
+        }
+        if (upvotes === max) {
+          winners.add(await post.author);
+        }
+      })
+    );
+
+    return [...winners];
   }
 }

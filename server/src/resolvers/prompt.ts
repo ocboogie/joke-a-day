@@ -14,16 +14,18 @@ import LoggerInstance from "../loaders/logger";
 import { Inject } from "typedi";
 import { Admin, CurrentUser } from "../decorators/auth";
 import Prompt from "../models/Prompt";
+import PromptRepo from "../customRepos/Prompt";
 import { PromptInfo } from "./types/prompt";
 import User from "../models/User";
 import Post from "../models/Post";
 import post from "./post";
+import { finishRound } from "../queues";
 
 @Resolver(of => Prompt)
 export default class {
   constructor(
-    @InjectRepository(Prompt)
-    private readonly promptRepository: Repository<Prompt>,
+    @InjectRepository(PromptRepo)
+    private readonly promptRepository: PromptRepo,
     @Inject("logger") private logger: typeof LoggerInstance
   ) {}
 
@@ -49,12 +51,14 @@ export default class {
 
   @Query(returns => Prompt, { nullable: true })
   currentPrompt() {
-    // TODO: Make sure this is current with the whole time zone thing
-    const today = new Date(Date.now());
+    return this.promptRepository.findCurrent();
+  }
 
-    return this.promptRepository.findOne({
-      where: { scheduled: Prompt.ScheduleDateFormat(today) }
-    });
+  @Mutation(returns => Boolean)
+  @Admin()
+  manuallyFinishRound(): true {
+    finishRound.add(null);
+    return true;
   }
 
   @Subscription({
