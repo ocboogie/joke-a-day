@@ -4,10 +4,11 @@ import Prompt from "../models/Prompt";
 @EntityRepository(Prompt)
 export default class PromptRepository extends Repository<Prompt> {
   findCurrent(options?: FindOneOptions<Prompt>) {
+    const now = Prompt.ScheduleDateFormat(new Date());
+
     return this.findOne({
       ...options,
-      where: { archived: false },
-      order: { scheduled: "ASC" }
+      where: { scheduled: now }
     });
   }
 }

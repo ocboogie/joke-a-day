@@ -10,10 +10,11 @@ finishRound.process(async () => {
   const promptRepository = getCustomRepository(PromptRepo);
   logger.info("Starting to finish the round");
 
-  const today = new Date(Date.now());
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
 
   const currentPrompt = await promptRepository.findOne({
-    where: { scheduled: Prompt.ScheduleDateFormat(today) },
+    where: { scheduled: Prompt.ScheduleDateFormat(yesterday) },
     relations: ["posts", "posts.author"]
   });
 
@@ -22,8 +23,6 @@ finishRound.process(async () => {
     // FIXME:
     throw new Error("No current prompt");
   }
-
-  currentPrompt.archived = true;
 
   const winners = await currentPrompt.computeWinners();
 

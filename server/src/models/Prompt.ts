@@ -46,10 +46,6 @@ export default class Prompt {
   @Column({ type: "date" })
   scheduled: string;
 
-  @Field()
-  @Column({ default: false })
-  archived: boolean;
-
   @Field(type => [Post])
   @OneToMany(
     type => Post,
@@ -69,7 +65,7 @@ export default class Prompt {
 
   public isCurrent(): boolean {
     const today = Prompt.ScheduleDateFormat(new Date(Date.now()));
-    return this.scheduled === today && !this.archived;
+    return this.scheduled === today;
   }
 
   /**
