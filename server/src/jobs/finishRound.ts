@@ -31,7 +31,7 @@ finishRound.process(async () => {
   }
 
   currentPrompt.winners = winners;
-  currentPrompt.active = false;
+  currentPrompt.archived = true;
 
   promptRepository.save(currentPrompt);
 });

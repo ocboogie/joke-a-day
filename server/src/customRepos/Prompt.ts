@@ -6,8 +6,8 @@ export default class PromptRepository extends Repository<Prompt> {
   findCurrent(options?: FindOneOptions<Prompt>) {
     return this.findOne({
       ...options,
-      where: { active: true },
-      order: { scheduled: "DESC" }
+      where: { archived: false },
+      order: { scheduled: "ASC" }
     });
   }
 }

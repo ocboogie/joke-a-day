@@ -38,7 +38,7 @@ type Prompt {
   id: String!
   content: String!
   scheduled: String!
-  active: Boolean!
+  archived: Boolean!
   posts: [Post!]!
   winners: [User!]!
 }
