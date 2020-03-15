@@ -62,7 +62,6 @@ export default {
         }
       });
       this.$root.meId = id;
-      // This dosen't need to be "true" but we need to put something there
       localStorage.setItem("meId", id);
       this.$router.replace({ name: "home" });
     }
