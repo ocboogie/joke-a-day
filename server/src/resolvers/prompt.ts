@@ -9,7 +9,7 @@ import {
   Root
 } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { Repository, Raw, LessThanOrEqual } from "typeorm";
 import LoggerInstance from "../loaders/logger";
 import { Inject } from "typedi";
 import { Admin, CurrentUser } from "../decorators/auth";
@@ -41,7 +41,11 @@ export default class {
 
   @Query(returns => [Prompt])
   prompts() {
-    return this.promptRepository.find();
+    const now = Prompt.ScheduleDateFormat(new Date());
+
+    return this.promptRepository.find({
+      where: { scheduled: LessThanOrEqual(now) }
+    });
   }
 
   @Query(returns => Prompt, { nullable: true })
