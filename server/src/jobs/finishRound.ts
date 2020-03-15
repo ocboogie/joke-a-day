@@ -23,15 +23,13 @@ finishRound.process(async () => {
     throw new Error("No current prompt");
   }
 
+  currentPrompt.archived = true;
+
   const winners = await currentPrompt.computeWinners();
 
-  if (!winners) {
-    // TODO: No posts
-    return;
+  if (winners) {
+    currentPrompt.winners = winners;
   }
-
-  currentPrompt.winners = winners;
-  currentPrompt.archived = true;
 
   promptRepository.save(currentPrompt);
 });
