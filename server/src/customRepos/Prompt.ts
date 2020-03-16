@@ -29,7 +29,7 @@ export default class PromptRepository extends Repository<Prompt> {
   findActiveById(id: string, options?: FindOneOptions<Prompt>) {
     const now = Prompt.ScheduleDateFormat(new Date());
 
-    return this.find({
+    return this.findOne({
       ...options,
       where: { id, scheduled: LessThanOrEqual(now) }
     });
