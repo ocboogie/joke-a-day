@@ -41,20 +41,12 @@ export default class {
 
   @Query(returns => [Prompt])
   prompts() {
-    const now = Prompt.ScheduleDateFormat(new Date());
-
-    return this.promptRepository.find({
-      where: { scheduled: LessThanOrEqual(now) }
-    });
+    return this.promptRepository.allActive();
   }
 
   @Query(returns => Prompt, { nullable: true })
   prompt(@Arg("id") id: string) {
-    const now = Prompt.ScheduleDateFormat(new Date());
-
-    return this.promptRepository.findOne({
-      where: { id, scheduled: LessThanOrEqual(now) }
-    });
+    return this.promptRepository.findActiveById(id);
   }
 
   @Query(returns => Prompt, { nullable: true })

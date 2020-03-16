@@ -1,4 +1,9 @@
-import { EntityRepository, Repository, FindOneOptions } from "typeorm";
+import {
+  EntityRepository,
+  Repository,
+  FindOneOptions,
+  LessThanOrEqual
+} from "typeorm";
 import Prompt from "../models/Prompt";
 
 @EntityRepository(Prompt)
@@ -9,6 +14,24 @@ export default class PromptRepository extends Repository<Prompt> {
     return this.findOne({
       ...options,
       where: { scheduled: now }
+    });
+  }
+
+  allActive(options?: FindOneOptions<Prompt>) {
+    const now = Prompt.ScheduleDateFormat(new Date());
+
+    return this.find({
+      ...options,
+      where: { scheduled: LessThanOrEqual(now) }
+    });
+  }
+
+  findActiveById(id: string, options?: FindOneOptions<Prompt>) {
+    const now = Prompt.ScheduleDateFormat(new Date());
+
+    return this.find({
+      ...options,
+      where: { id, scheduled: LessThanOrEqual(now) }
     });
   }
 }
