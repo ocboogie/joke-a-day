@@ -56,8 +56,9 @@ export default class {
 
   @Mutation(returns => Boolean)
   @Admin()
-  manuallyFinishRound(): true {
-    finishRound.add(null);
+  async manuallyFinishRound(): Promise<true> {
+    const currentPrompt = await this.promptRepository.findCurrent();
+    finishRound.add(currentPrompt);
     return true;
   }
 

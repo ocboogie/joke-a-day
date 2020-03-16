@@ -1,34 +1,59 @@
 import { Container } from "typedi";
 import { getCustomRepository } from "typeorm";
+import MailgunInstance from "../loaders/mailgun";
 import LoggerInstance from "../loaders/logger";
 import { finishRound } from "../queues";
 import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
 
-finishRound.process(async () => {
+finishRound.process(async job => {
   const logger = Container.get("logger") as typeof LoggerInstance;
+  const mailgun = Container.get("mailgun") as typeof MailgunInstance;
   const promptRepository = getCustomRepository(PromptRepo);
   logger.info("Starting to finish the round");
 
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
+  let prompt;
 
-  const currentPrompt = await promptRepository.findOne({
-    where: { scheduled: Prompt.ScheduleDateFormat(yesterday) },
-    relations: ["posts", "posts.author"]
-  });
+  if (job.data) {
+    prompt = promptRepository.create(job.data);
+  } else {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
 
-  if (!currentPrompt) {
-    logger.error("No current prompt");
-    // FIXME:
-    throw new Error("No current prompt");
+    prompt = await promptRepository.findOne({
+      where: { scheduled: Prompt.ScheduleDateFormat(yesterday) },
+      relations: ["posts", "posts.author"]
+    });
+
+    if (!prompt) {
+      logger.error("No current prompt");
+      // FIXME:
+      throw new Error("No current prompt");
+    }
   }
 
-  const winners = await currentPrompt.computeWinners();
+  console.log(prompt.computeWinners);
+
+  const winners = await prompt.computeWinners();
+  console.log("prompt.computeWinners");
 
   if (winners) {
-    currentPrompt.winners = winners;
+    prompt.winners = winners;
+    try {
+      await Promise.all(
+        winners.map(user =>
+          mailgun.messages().send({
+            from: "Test 123 <hello@world.com>",
+            to: user.email,
+            subject: "You won!",
+            text: "You've won a prompt"
+          })
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  promptRepository.save(currentPrompt);
+  await promptRepository.save(prompt);
 });
