@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from "type-graphql";
 import { Length, IsEmail } from "class-validator";
-import User, { maxNameLength } from "../../models/User";
+import User, { maxNameLength } from "../models/User";
 
 @InputType()
 export class UserCredentials {
