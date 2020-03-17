@@ -63,6 +63,9 @@ export default class Prompt {
   @JoinTable()
   winners: Lazy<User[]>;
 
+  /**
+   * If the prompt is scheduled for today
+   */
   public isCurrent(): boolean {
     const today = Prompt.ScheduleDateFormat(new Date(Date.now()));
     return this.scheduled === today;
