@@ -38,6 +38,10 @@ async function getUserFromContext(context: Context) {
   return user;
 }
 
+/**
+ * A type-graphql method decorator guard that ensures the user is an admin,
+ * throwing an unauthorized error if they aren't
+ */
 export function Admin() {
   return createMethodDecorator<Context>(async ({ context }, next) => {
     const user = await getUserFromContext(context);
@@ -49,6 +53,12 @@ export function Admin() {
     return next();
   });
 }
+
+/**
+ * A type-graphql param decorator that resolves to the current user
+ *
+ * @param required weather to not run the resolver if the user couldn't be found
+ */
 export function CurrentUser(required: boolean = true) {
   return createParamDecorator<Context>(async ({ context }) => {
     const user = await getUserFromContext(context);

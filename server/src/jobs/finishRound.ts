@@ -32,10 +32,7 @@ finishRound.process(async job => {
     }
   }
 
-  console.log(prompt.computeWinners);
-
   const winners = await prompt.computeWinners();
-  console.log("prompt.computeWinners");
 
   if (winners) {
     prompt.winners = winners;
