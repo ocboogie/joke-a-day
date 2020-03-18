@@ -24,8 +24,5 @@ export default {
   rememberMeSessionLifetimeDays: REMEMBER_ME_SESSION_LIFETIME_DAYS
     ? parseInt(REMEMBER_ME_SESSION_LIFETIME_DAYS)
     : 7,
-  invitationLifetimeDays: INVITATION_LIFETIME_DAYS
-    ? parseInt(INVITATION_LIFETIME_DAYS)
-    : 1,
   logLevel: LOG_LEVEL || "silly"
 };
