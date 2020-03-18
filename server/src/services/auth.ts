@@ -45,13 +45,9 @@ export default class AuthService {
     const id = crypto.randomBytes(32).toString("hex");
     const hashedId = Session.hashSessionId(id);
 
-    const expires = new Date();
-
-    expires.setDate(
-      new Date().getDate() +
-        (rememberMe
-          ? config.rememberMeSessionLifetimeDays
-          : config.sessionLifetimeDays)
+    const expires = new Date(
+      Date.now() +
+        (rememberMe ? config.rememberMeSessionLifetime : config.sessionLifetime)
     );
 
     const session = this.sessionRepository.create({
