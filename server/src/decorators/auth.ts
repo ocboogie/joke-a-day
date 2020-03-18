@@ -1,8 +1,5 @@
-import {
-  createParamDecorator,
-  UnauthorizedError,
-  createMethodDecorator
-} from "type-graphql";
+import { createParamDecorator, createMethodDecorator } from "type-graphql";
+import { AuthenticationError, ForbiddenError } from "apollo-server";
 import { Context } from "../loaders/configureGraphqlServer";
 import { getRepository } from "typeorm";
 import Session from "../models/Session";
@@ -46,8 +43,11 @@ export function Admin() {
   return createMethodDecorator<Context>(async ({ context }, next) => {
     const user = await getUserFromContext(context);
 
-    if (!user?.admin) {
-      throw new UnauthorizedError();
+    if (!user) {
+      throw new AuthenticationError("Must be logged in");
+    }
+    if (!user.admin) {
+      throw new ForbiddenError("Must be an admin");
     }
 
     return next();
@@ -64,7 +64,7 @@ export function CurrentUser(required: boolean = true) {
     const user = await getUserFromContext(context);
 
     if (!user && required) {
-      throw new UnauthorizedError();
+      throw new AuthenticationError("Must be logged in");
     }
 
     return user;

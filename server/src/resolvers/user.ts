@@ -8,7 +8,7 @@ import User from "../models/User";
 import config from "../config";
 import LoggerInstance from "../loaders/logger";
 import argon2 from "argon2";
-import { UnauthorizedError } from "type-graphql";
+import { ForbiddenError, AuthenticationError } from "apollo-server";
 import { Response } from "express";
 import { Context } from "../loaders/configureGraphqlServer";
 import { CurrentUser } from "../decorators/auth";
@@ -42,16 +42,21 @@ export default class {
 
   @Mutation(returns => LoginResult)
   async signUp(@Arg("user") userInput: UserInfo, @Ctx() { res }: Context) {
-    const { user, session, sessionId } = await this.authService.signUp(
-      userInput
-    );
+    try {
+      const { user, session, sessionId } = await this.authService.signUp(
+        userInput
+      );
 
-    saveSession(res, session, sessionId, true);
+      saveSession(res, session, sessionId, true);
 
-    return {
-      user,
-      sessionId
-    };
+      return {
+        user,
+        sessionId
+      };
+    } catch (err) {
+      // FIXME: Use a better error
+      throw new AuthenticationError("Sign up failed");
+    }
   }
 
   @Mutation(returns => LoginResult)
@@ -59,18 +64,23 @@ export default class {
     @Arg("user") { email, password, rememberMe }: UserLogin,
     @Ctx() { res }: Context
   ) {
-    const { user, session, sessionId } = await this.authService.login(
-      email,
-      password,
-      rememberMe
-    );
+    try {
+      const { user, session, sessionId } = await this.authService.login(
+        email,
+        password,
+        rememberMe
+      );
 
-    saveSession(res, session, sessionId, rememberMe);
+      saveSession(res, session, sessionId, rememberMe);
 
-    return {
-      user,
-      sessionId
-    };
+      return {
+        user,
+        sessionId
+      };
+    } catch (err) {
+      // FIXME: Use a better error
+      throw new AuthenticationError("Login failed");
+    }
   }
 
   @Mutation(returns => Boolean)
@@ -92,7 +102,7 @@ export default class {
     @Arg("username") username: string
   ) {
     if (!user.canModify(userId)) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError("You don't have access to this user");
     }
 
     user.name = username;

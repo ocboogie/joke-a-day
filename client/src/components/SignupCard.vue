@@ -31,6 +31,7 @@
 </template>
 <script>
 import gql from "graphql-tag";
+import { mutations } from "../store";
 
 export default {
   data: () => ({ username: "", email: "", password: "" }),
@@ -61,8 +62,7 @@ export default {
           password: this.password
         }
       });
-      this.$root.meId = id;
-      localStorage.setItem("meId", id);
+      mutations.loggedIn(id);
       this.$router.replace({ name: "home" });
     }
   }

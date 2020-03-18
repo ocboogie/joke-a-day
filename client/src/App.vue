@@ -10,10 +10,30 @@
 </template>
 <script>
 import Navbar from "./components/Navbar.vue";
+import { store, mutations } from "./store";
 
 export default {
   components: {
     Navbar
+  },
+  computed: {
+    authenticationError() {
+      return store.authenticationError;
+    }
+  },
+  watch: {
+    authenticationError(message) {
+      if (!message) {
+        return;
+      }
+      this.$notify({
+        title: "Authentification error",
+        type: "warning",
+        message
+      });
+      this.$router.replace({ name: "login" });
+      mutations.clearAuthenticationError();
+    }
   }
 };
 </script>

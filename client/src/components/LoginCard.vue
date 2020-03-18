@@ -23,6 +23,7 @@
   </BaseCard>
 </template>
 <script>
+import { mutations } from "../store";
 import gql from "graphql-tag";
 
 export default {
@@ -51,11 +52,8 @@ export default {
           password: this.password
         }
       });
-      console.log(id);
       // TODO: Factor out the similar logic in SignupCard
-      this.$root.meId = id;
-      // This dosen't need to be "true" but we need to put something there
-      localStorage.setItem("meId", id);
+      mutations.loggedIn(id);
       this.$router.replace({ name: "home" });
     }
   }

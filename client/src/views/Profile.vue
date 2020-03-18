@@ -16,6 +16,7 @@
 </template>
 <script>
 import gql from "graphql-tag";
+import { store } from "../store";
 
 export default {
   computed: {
@@ -38,7 +39,7 @@ export default {
           }
         `,
         variables: {
-          meId: this.$root.meId,
+          meId: store.meId,
           username: this.me.name
         }
       });

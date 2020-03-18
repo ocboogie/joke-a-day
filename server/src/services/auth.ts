@@ -8,7 +8,6 @@ import User from "../models/User";
 import LoggerInstance from "../loaders/logger";
 import config from "../config";
 import { UserInfo, UserLogin } from "../types/user";
-import { UnauthorizedError } from "type-graphql";
 
 // FIXME:
 let mockPasswordHash: string;
@@ -117,15 +116,15 @@ export default class AuthService {
       // emails by comparing time differences.
       // https://www.owasp.org/index.php/Testing_for_User_Enumeration_and_Guessable_User_Account_(OWASP-AT-002)
       await argon2.verify(mockPasswordHash, password);
-      // FIXME: Don't use graphql errors in services
-      throw new UnauthorizedError();
+      // FIXME: Use better errors
+      throw "User not found";
     }
 
     const validPassword = await argon2.verify(user.password, password);
 
     if (!validPassword) {
       // FIXME: Don't use graphql errors in services
-      throw new UnauthorizedError();
+      throw "Invalid password";
     }
 
     const { session, sessionId } = await this.createSession(user, rememberMe);

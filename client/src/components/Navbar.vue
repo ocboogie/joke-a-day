@@ -1,7 +1,7 @@
 <template>
   <el-menu default-active="/" class="navbar" mode="horizontal" router>
     <el-menu-item index="/">Home</el-menu-item>
-    <template v-if="$root.meId">
+    <template v-if="loggedIn">
       <el-submenu class="right" index="2-4">
         <template slot="title"><i class="el-icon-user-solid"/></template>
         <el-menu-item index="/profile">Profile</el-menu-item>
@@ -16,8 +16,14 @@
 </template>
 <script>
 import gql from "graphql-tag";
+import { mutations, getters } from "../store";
 
 export default {
+  computed: {
+    loggedIn() {
+      return getters.loggedIn();
+    }
+  },
   methods: {
     async logout() {
       await this.$apollo.mutate({
@@ -27,8 +33,7 @@ export default {
           }
         `
       });
-      localStorage.removeItem("meId");
-      this.$root.meId = null;
+      mutations.loggedOut();
       this.$router.replace({ name: "home" });
     }
   }
