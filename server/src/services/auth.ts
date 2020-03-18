@@ -9,18 +9,6 @@ import LoggerInstance from "../loaders/logger";
 import config from "../config";
 import { UserInfo, UserLogin } from "../types/user";
 
-// FIXME:
-let mockPasswordHash: string;
-
-argon2
-  .hash("This shouldn't match any thing", {
-    memoryCost: config.hasingMemoryCost,
-    timeCost: config.hasingTimeCost
-  })
-  .then(hash => {
-    mockPasswordHash = hash;
-  });
-
 @Service("auth.service")
 export default class AuthService {
   constructor(
@@ -115,7 +103,10 @@ export default class AuthService {
       // This is here to prevent an attacker from getting a list of user's
       // emails by comparing time differences.
       // https://www.owasp.org/index.php/Testing_for_User_Enumeration_and_Guessable_User_Account_(OWASP-AT-002)
-      await argon2.verify(mockPasswordHash, password);
+      await argon2.hash(password, {
+        memoryCost: config.hasingMemoryCost,
+        timeCost: config.hasingTimeCost
+      });
       // FIXME: Use better errors
       throw "User not found";
     }
