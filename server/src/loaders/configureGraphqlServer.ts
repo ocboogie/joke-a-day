@@ -2,12 +2,16 @@ import http from "http";
 import { buildSchema, AuthChecker } from "type-graphql";
 import { Container } from "typedi";
 import express from "express";
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, ApolloError } from "apollo-server-express";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
+import { GraphQLError } from "graphql";
+import { v4 } from "uuid";
 
 import resolvers from "../resolvers";
 import cookieParser from "cookie-parser";
 import User from "../models/User";
+import LoggerInstance from "./logger";
+import config from "../config";
 
 const context = ({ req, res }: ExpressContext) => ({
   req,
@@ -26,6 +30,22 @@ export default async () => {
 
   const server = new ApolloServer({
     schema,
+    // https://youtu.be/7oLczJD6zZI
+    formatError(error: GraphQLError) {
+      if (error.originalError instanceof ApolloError) {
+        return error;
+      }
+      const logger = Container.get("logger") as typeof LoggerInstance;
+
+      const errId = v4();
+      logger.error(error.message, { error, errId });
+
+      if (config.development) {
+        return error;
+      }
+
+      return new GraphQLError(`Internal Error: ${errId}`);
+    },
     // HACKY: This whole area I don't fully understand but hey it works.
     // This is done to get the request and cookies when in a subscription
     // resolver.
