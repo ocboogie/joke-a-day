@@ -9,6 +9,47 @@ import LoggerInstance from "../loaders/logger";
 import config from "../config";
 import { UserInfo, UserLogin } from "../types/user";
 
+export class AuthenticationError extends Error {
+  constructor(public email: string, message?: string) {
+    super(message || `Authentication error with user: ${email}`);
+    this.name = "AuthenticationError";
+  }
+}
+
+export class EmailInUseError extends AuthenticationError {
+  constructor(public email: string) {
+    super(email, "Email already in use");
+    this.name = "EmailInUse";
+  }
+}
+
+export class InvalidCredentials extends AuthenticationError {
+  constructor(public email: string, message?: string) {
+    super(email, message || "Invalid credentials");
+    this.name = "InvalidCredentials";
+  }
+}
+
+/**
+ * This is not a user facing error. Use InvalidCredentials instead.
+ */
+export class InvalidEmailError extends InvalidCredentials {
+  constructor(public email: string) {
+    super(email, "No user with that email");
+    this.name = "InvalidEmail";
+  }
+}
+
+/**
+ * This is not a user facing error. Use InvalidCredentials instead.
+ */
+export class IncorrectPasswordError extends InvalidCredentials {
+  constructor(public email: string) {
+    super(email, "User found but the password was incorrect");
+    this.name = "IncorrectPassword";
+  }
+}
+
 @Service("auth.service")
 export default class AuthService {
   constructor(
@@ -58,6 +99,11 @@ export default class AuthService {
   async signUp(userInput: UserInfo) {
     this.logger.silly(`Creating a new user: ${userInput.email}`);
 
+    if (await this.userRepository.findOne({ email: userInput.email })) {
+      this.logger.silly(`Email already in use: ${userInput.email}`);
+      throw new EmailInUseError(userInput.email);
+    }
+
     const hashedPassword = await argon2.hash(userInput.password, {
       memoryCost: config.hasingMemoryCost,
       timeCost: config.hasingTimeCost
@@ -69,12 +115,7 @@ export default class AuthService {
       password: hashedPassword
     });
 
-    try {
-      await this.userRepository.insert(user);
-    } catch (err) {
-      // TODO:
-      throw err;
-    }
+    await this.userRepository.insert(user);
 
     const { session, sessionId } = await this.createSession(user, true);
 
@@ -97,6 +138,7 @@ export default class AuthService {
    * @returns the user object, the session object and the unhashed session id
    */
   async login(email: string, password: string, rememberMe: boolean = false) {
+    this.logger.silly(`User logging in: ${email}`);
     const user = await this.userRepository.findOne({ email });
 
     if (!user) {
@@ -107,15 +149,15 @@ export default class AuthService {
         memoryCost: config.hasingMemoryCost,
         timeCost: config.hasingTimeCost
       });
-      // FIXME: Use better errors
-      throw "User not found";
+      this.logger.silly(`No user with email: ${email}`);
+      throw new InvalidEmailError(email);
     }
 
     const validPassword = await argon2.verify(user.password, password);
 
     if (!validPassword) {
-      // FIXME: Don't use graphql errors in services
-      throw "Invalid password";
+      this.logger.silly(`Incorrect password: ${email}`);
+      throw new IncorrectPasswordError(email);
     }
 
     const { session, sessionId } = await this.createSession(user, rememberMe);
