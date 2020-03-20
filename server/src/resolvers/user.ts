@@ -8,11 +8,15 @@ import User from "../models/User";
 import config from "../config";
 import LoggerInstance from "../loaders/logger";
 import argon2 from "argon2";
-import { ForbiddenError, AuthenticationError } from "apollo-server";
+import {
+  ForbiddenError,
+  AuthenticationError,
+  UserInputError
+} from "apollo-server";
 import { Response } from "express";
 import { Context } from "../loaders/configureGraphqlServer";
 import { CurrentUser } from "../decorators/auth";
-import AuthService from "../services/auth";
+import AuthService, { EmailInUseError } from "../services/auth";
 import { Inject } from "typedi";
 
 async function saveSession(
@@ -54,8 +58,10 @@ export default class {
         sessionId
       };
     } catch (err) {
-      // FIXME: Use a better error
-      throw new AuthenticationError("Sign up failed");
+      if (err instanceof EmailInUseError) {
+        throw new UserInputError("Email already in use", { email: err.email });
+      }
+      throw err;
     }
   }
 
