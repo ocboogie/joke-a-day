@@ -44,10 +44,6 @@ export default async () => {
       const errId = v4();
       logger.error(error.message, { error, errId });
 
-      // if (config.development) {
-      //   return error;
-      // }
-
       return new GraphQLError(
         `Internal Error: ${errId}`,
         undefined,
