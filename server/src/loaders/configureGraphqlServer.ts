@@ -2,11 +2,7 @@ import http from "http";
 import { buildSchema, AuthChecker } from "type-graphql";
 import { Container } from "typedi";
 import express from "express";
-import {
-  ApolloServer,
-  ApolloError,
-  InternalServer
-} from "apollo-server-express";
+import { ApolloServer, ApolloError } from "apollo-server-express";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { GraphQLError } from "graphql";
 import { v4 } from "uuid";
