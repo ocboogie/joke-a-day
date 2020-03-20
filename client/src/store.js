@@ -7,7 +7,8 @@ import Vue from "vue";
 // like Vuex
 export const store = Vue.observable({
   meId: localStorage.getItem("meId"),
-  authenticationError: null
+  authenticationError: null,
+  internalServerErrors: []
 });
 
 export const mutations = {
@@ -22,11 +23,20 @@ export const mutations = {
     store.meId = null;
     localStorage.removeItem("meId");
   },
+
   setAuthenticationError(error) {
     store.authenticationError = error;
   },
   clearAuthenticationError() {
     store.authenticationError = null;
+  },
+  setInternalServerErrors(errors) {
+    console.log("123");
+
+    store.internalServerErrors = errors;
+  },
+  clearInternalServerErrors() {
+    store.internalServerErrors = [];
   }
 };
 

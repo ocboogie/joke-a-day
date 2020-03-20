@@ -19,6 +19,9 @@ export default {
   computed: {
     authenticationError() {
       return store.authenticationError;
+    },
+    internalServerErrors() {
+      return store.internalServerErrors;
     }
   },
   watch: {
@@ -33,6 +36,20 @@ export default {
       });
       this.$router.replace({ name: "login" });
       mutations.clearAuthenticationError();
+    },
+    internalServerErrors(errors) {
+      if (errors.length === 0) {
+        return;
+      }
+      this.$notify({
+        title: "Interal Server Error",
+        type: "error",
+        dangerouslyUseHTMLString: true,
+        message: `Please try again. If this problem persists, contact support with the following id number${
+          errors.length === 1 ? "" : "s"
+        }: ${errors.map(err => `<code>${err.extensions.id}</code>`).join(", ")}`
+      });
+      mutations.clearInternalServerErrors();
     }
   }
 };
