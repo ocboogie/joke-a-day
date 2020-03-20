@@ -6,7 +6,7 @@ import { mutations } from "../../store";
  */
 export default onError(({ graphQLErrors }) => {
   const internalServerErrors = graphQLErrors?.filter(
-    err => err.extensions.code !== "INTERNAL_SERVER_ERROR"
+    err => err.extensions.code === "INTERNAL_SERVER_ERROR"
   );
 
   if (internalServerErrors.length !== 0) {

@@ -2,7 +2,11 @@ import http from "http";
 import { buildSchema, AuthChecker } from "type-graphql";
 import { Container } from "typedi";
 import express from "express";
-import { ApolloServer, ApolloError } from "apollo-server-express";
+import {
+  ApolloServer,
+  ApolloError,
+  InternalServer
+} from "apollo-server-express";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { GraphQLError } from "graphql";
 import { v4 } from "uuid";
@@ -40,9 +44,9 @@ export default async () => {
       const errId = v4();
       logger.error(error.message, { error, errId });
 
-      if (config.development) {
-        return error;
-      }
+      // if (config.development) {
+      //   return error;
+      // }
 
       return new GraphQLError(
         `Internal Error: ${errId}`,
@@ -51,7 +55,7 @@ export default async () => {
         undefined,
         undefined,
         undefined,
-        { id: errId }
+        { id: errId, code: "INTERNAL_SERVER_ERROR" }
       );
     },
     // HACKY: This whole area I don't fully understand but hey it works.
