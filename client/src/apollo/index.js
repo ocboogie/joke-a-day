@@ -4,7 +4,7 @@ import { split } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import httpLink from "./links/httpLink";
 import wsLink from "./links/wsLink";
-import authLink from "./links/authLink";
+import logoutLink from "./links/logoutLink";
 
 const connectionLink = split(
   // split based on operation type
@@ -19,7 +19,7 @@ const connectionLink = split(
   httpLink
 );
 
-const link = authLink.concat(connectionLink);
+const link = logoutLink.concat(connectionLink);
 
 export default new ApolloClient({
   link,
