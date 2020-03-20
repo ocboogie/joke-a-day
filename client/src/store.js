@@ -31,8 +31,6 @@ export const mutations = {
     store.authenticationError = null;
   },
   setInternalServerErrors(errors) {
-    console.log("123");
-
     store.internalServerErrors = errors;
   },
   clearInternalServerErrors() {
