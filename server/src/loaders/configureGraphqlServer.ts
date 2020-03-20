@@ -44,7 +44,15 @@ export default async () => {
         return error;
       }
 
-      return new GraphQLError(`Internal Error: ${errId}`);
+      return new GraphQLError(
+        `Internal Error: ${errId}`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        { id: errId }
+      );
     },
     // HACKY: This whole area I don't fully understand but hey it works.
     // This is done to get the request and cookies when in a subscription
