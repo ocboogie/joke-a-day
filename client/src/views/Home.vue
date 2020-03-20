@@ -31,7 +31,7 @@ export default {
           }
         }
       `,
-      update: data => data.currentPrompt.id
+      update: data => (data.currentPrompt ? data.currentPrompt.id : null)
     }
   }
 };
