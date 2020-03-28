@@ -70,37 +70,4 @@ export default class Prompt {
     const today = Prompt.ScheduleDateFormat(new Date(Date.now()));
     return this.scheduled === today;
   }
-
-  /**
-   * Return the authors of the highest upvoted posts. Typically, this should
-   * return one user but if there are multiple posts tied for first then this
-   * returns an array of users.
-   *
-   * @returns the winner(s) of this prompt and undefied if there aren't any posts
-   */
-  public async computeWinners() {
-    const posts = await this.posts;
-
-    if (!posts.length) {
-      return;
-    }
-
-    let max = -Infinity;
-    const winners: Set<User> = new Set();
-
-    await Promise.all(
-      posts.map(async post => {
-        const upvotes = await post.upvotes;
-        if (upvotes > max) {
-          winners.clear();
-          max = upvotes;
-        }
-        if (upvotes === max) {
-          winners.add(await post.author);
-        }
-      })
-    );
-
-    return [...winners];
-  }
 }

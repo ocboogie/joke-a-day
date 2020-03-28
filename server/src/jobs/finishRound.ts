@@ -5,10 +5,12 @@ import LoggerInstance from "../loaders/logger";
 import { finishRound } from "../queues";
 import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
+import RoundManagement from "../services/roundManagement";
 
 finishRound.process(async job => {
   const logger = Container.get("logger") as typeof LoggerInstance;
   const mailgun = Container.get("mailgun") as typeof MailgunInstance;
+  const roundManagement = Container.get(RoundManagement);
   const promptRepository = getCustomRepository(PromptRepo);
   logger.info("Starting to finish the round");
 
@@ -32,7 +34,7 @@ finishRound.process(async job => {
     }
   }
 
-  const winners = await prompt.computeWinners();
+  const winners = await roundManagement.computeWinners(prompt);
 
   if (winners) {
     prompt.winners = winners;
