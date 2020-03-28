@@ -50,7 +50,7 @@ export class IncorrectPasswordError extends InvalidCredentials {
   }
 }
 
-@Service("auth.service")
+@Service()
 export default class AuthService {
   constructor(
     @InjectRepository(User)

@@ -41,7 +41,7 @@ export default class {
     @InjectRepository(Session)
     private readonly sessionRepository: Repository<Session>,
     @Inject("logger") private logger: typeof LoggerInstance,
-    @Inject("auth.service") private readonly authService: AuthService
+    private readonly authService: AuthService
   ) {}
 
   @Mutation(returns => LoginResult)
