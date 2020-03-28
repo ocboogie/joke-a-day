@@ -58,7 +58,7 @@ export default class {
   @Admin()
   async manuallyFinishRound(): Promise<true> {
     const currentPrompt = await this.promptRepository.findCurrent();
-    finishRound.add(currentPrompt);
+    finishRound.add(currentPrompt || null);
     return true;
   }
 
