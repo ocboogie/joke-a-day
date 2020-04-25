@@ -8,8 +8,8 @@ import LoginCard from "../components/LoginCard.vue";
 
 export default {
   components: {
-    LoginCard
-  }
+    LoginCard,
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -8,7 +8,7 @@
     >
       Create post
     </base-button>
-    <el-divider><div class="circle-in-divider"/></el-divider>
+    <el-divider><div class="circle-in-divider" /></el-divider>
     <Posts :active="active" :promptId="id" :posts="prompt.posts" />
   </div>
 </template>
@@ -20,17 +20,17 @@ import InfoDisplay from "./InfoDisplay.vue";
 export default {
   components: {
     Posts,
-    InfoDisplay
+    InfoDisplay,
   },
   props: {
     id: {
       type: String,
-      requried: true
+      requried: true,
     },
     active: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data: () => ({ prompt: null }),
   methods: {
@@ -38,7 +38,7 @@ export default {
       this.$prompt("What do you want to say?", {
         confirmButtonText: "Post",
         cancelButtonText: "Cancel",
-        inputErrorMessage: "Invalid post"
+        inputErrorMessage: "Invalid post",
       }).then(({ value }) => {
         this.createPost(value);
       });
@@ -54,10 +54,10 @@ export default {
         `,
         variables: {
           postContent,
-          promptId: this.id
-        }
+          promptId: this.id,
+        },
       });
-    }
+    },
   },
   apollo: {
     prompt: {
@@ -100,18 +100,18 @@ export default {
           `,
           variables() {
             return {
-              promptId: this.id
+              promptId: this.id,
             };
           },
           updateQuery: (previousResult, { subscriptionData }) => {
             const postUpdated = subscriptionData.data.postUpdated;
             const updatedPost = previousResult.prompt.posts.find(
-              post => postUpdated.id == post.id
+              (post) => postUpdated.id == post.id
             );
             Object.assign(updatedPost, postUpdated);
 
             return previousResult;
-          }
+          },
         },
         {
           document: gql`
@@ -130,18 +130,18 @@ export default {
           `,
           variables() {
             return {
-              promptId: this.id
+              promptId: this.id,
             };
           },
           updateQuery: (previousResult, { subscriptionData }) => {
             previousResult.prompt.posts.push(subscriptionData.data.postAdded);
 
             return previousResult;
-          }
-        }
-      ]
-    }
-  }
+          },
+        },
+      ],
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

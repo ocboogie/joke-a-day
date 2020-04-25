@@ -11,9 +11,9 @@ export default {
   props: {
     paddingless: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
 

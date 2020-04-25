@@ -9,14 +9,14 @@ import {
   Arg,
   PubSub,
   PubSubEngine,
-  Publisher
+  Publisher,
 } from "type-graphql";
 import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
 import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 
-@Resolver(of => Post)
+@Resolver((of) => Post)
 export default class {
   constructor(
     @InjectRepository(Vote)
@@ -29,7 +29,7 @@ export default class {
   async vote(postId: string, user: User, voteValue: number) {
     const post = await this.postRepository.findOne({
       where: { id: postId },
-      relations: ["prompt"]
+      relations: ["prompt"],
     });
     if (!post) {
       // FIXME:
@@ -43,13 +43,13 @@ export default class {
     const vote = this.voteRepository.create({
       vote: voteValue,
       post: { id: postId },
-      voter: user
+      voter: user,
     });
     await this.voteRepository.save(vote);
     return post;
   }
 
-  @Mutation(returns => Post)
+  @Mutation((returns) => Post)
   async upvote(
     @Arg("postId") postId: string,
     @CurrentUser() user: User,
@@ -60,7 +60,7 @@ export default class {
     return post;
   }
 
-  @Mutation(returns => Post)
+  @Mutation((returns) => Post)
   async downvote(
     @Arg("postId") postId: string,
     @CurrentUser() user: User,
@@ -71,7 +71,7 @@ export default class {
     return post;
   }
 
-  @Mutation(returns => Post)
+  @Mutation((returns) => Post)
   async unvote(
     @Arg("postId") postId: string,
     @CurrentUser() user: User,
@@ -79,7 +79,7 @@ export default class {
   ) {
     const post = await this.postRepository.findOne({
       where: { id: postId },
-      relations: ["prompt"]
+      relations: ["prompt"],
     });
     if (!post) {
       // FIXME:

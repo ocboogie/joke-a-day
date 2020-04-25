@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   ManyToMany,
-  JoinTable
+  JoinTable,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
@@ -46,20 +46,12 @@ export default class Prompt {
   @Column({ type: "date" })
   scheduled: string;
 
-  @Field(type => [Post])
-  @OneToMany(
-    type => Post,
-    post => post.prompt,
-    { lazy: true }
-  )
+  @Field((type) => [Post])
+  @OneToMany((type) => Post, (post) => post.prompt, { lazy: true })
   posts: Lazy<Post[]>;
 
-  @Field(type => [User])
-  @ManyToMany(
-    type => User,
-    user => user.wins,
-    { lazy: true }
-  )
+  @Field((type) => [User])
+  @ManyToMany((type) => User, (user) => user.wins, { lazy: true })
   @JoinTable()
   winners: Lazy<User[]>;
 

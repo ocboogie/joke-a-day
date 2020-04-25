@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   Repository,
   JoinColumn,
-  getRepository
+  getRepository,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
@@ -29,15 +29,15 @@ export default class Post {
   @Column()
   authorId: string;
 
-  @Field(type => User)
-  @ManyToOne(type => User, { lazy: true })
+  @Field((type) => User)
+  @ManyToOne((type) => User, { lazy: true })
   @JoinColumn({ name: "authorId" })
   author: Lazy<User>;
 
   @Column()
   promptId: string;
 
-  @ManyToOne(type => Prompt, { lazy: true })
+  @ManyToOne((type) => Prompt, { lazy: true })
   @JoinColumn({ name: "promptId" })
   prompt: Lazy<Prompt>;
 
@@ -57,6 +57,6 @@ export default class Post {
       .select("COALESCE(SUM(Vote.vote), 0)", "upvotes")
       .where('"Vote"."postId" = :postId', { postId: this.id })
       .getRawOne()
-      .then(vote => Number(vote.upvotes));
+      .then((vote) => Number(vote.upvotes));
   }
 }

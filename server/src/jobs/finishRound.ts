@@ -7,7 +7,7 @@ import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
 import RoundManagement from "../services/roundManagement";
 
-finishRound.process(async job => {
+finishRound.process(async (job) => {
   const logger = Container.get("logger") as typeof LoggerInstance;
   const mailgun = Container.get("mailgun") as typeof MailgunInstance;
   const roundManagement = Container.get(RoundManagement);
@@ -24,7 +24,7 @@ finishRound.process(async job => {
 
     prompt = await promptRepository.findOne({
       where: { scheduled: Prompt.ScheduleDateFormat(yesterday) },
-      relations: ["posts", "posts.author"]
+      relations: ["posts", "posts.author"],
     });
 
     if (!prompt) {
@@ -40,12 +40,12 @@ finishRound.process(async job => {
     prompt.winners = winners;
     try {
       await Promise.all(
-        winners.map(user =>
+        winners.map((user) =>
           mailgun.messages().send({
             from: "Test 123 <hello@world.com>",
             to: user.email,
             subject: "You won!",
-            text: "You've won a prompt"
+            text: "You've won a prompt",
           })
         )
       );

@@ -6,7 +6,7 @@ import { mutations } from "../../store";
  * an with the extension code "UNAUTHENTICATED"
  */
 export default onError(({ graphQLErrors }) => {
-  if (graphQLErrors?.some(err => err.extensions.code == "UNAUTHENTICATED")) {
+  if (graphQLErrors?.some((err) => err.extensions.code == "UNAUTHENTICATED")) {
     mutations.setAuthenticationError("Session expired");
     mutations.loggedOut();
   }

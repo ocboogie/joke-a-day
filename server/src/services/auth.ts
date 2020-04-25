@@ -81,7 +81,7 @@ export default class AuthService {
     const session = this.sessionRepository.create({
       id: hashedId,
       user,
-      expires
+      expires,
     });
 
     await this.sessionRepository.insert(session);
@@ -106,13 +106,13 @@ export default class AuthService {
 
     const hashedPassword = await argon2.hash(userInput.password, {
       memoryCost: config.hasingMemoryCost,
-      timeCost: config.hasingTimeCost
+      timeCost: config.hasingTimeCost,
     });
 
     const user = this.userRepository.create({
       ...userInput,
       admin: true,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     await this.userRepository.insert(user);
@@ -124,7 +124,7 @@ export default class AuthService {
     return {
       user,
       session,
-      sessionId
+      sessionId,
     };
   }
 
@@ -147,7 +147,7 @@ export default class AuthService {
       // https://www.owasp.org/index.php/Testing_for_User_Enumeration_and_Guessable_User_Account_(OWASP-AT-002)
       await argon2.hash(password, {
         memoryCost: config.hasingMemoryCost,
-        timeCost: config.hasingTimeCost
+        timeCost: config.hasingTimeCost,
       });
       this.logger.silly(`No user with email: ${email}`);
       throw new InvalidEmailError(email);
@@ -165,7 +165,7 @@ export default class AuthService {
     return {
       user,
       session,
-      sessionId
+      sessionId,
     };
   }
 

@@ -19,7 +19,7 @@ import Prompt from "../components/Prompt.vue";
 export default {
   name: "home",
   components: {
-    Prompt
+    Prompt,
   },
   data: () => ({ currentPromptId: null }),
   apollo: {
@@ -31,9 +31,9 @@ export default {
           }
         }
       `,
-      update: data => (data.currentPrompt ? data.currentPrompt.id : null)
-    }
-  }
+      update: (data) => (data.currentPrompt ? data.currentPrompt.id : null),
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -20,8 +20,8 @@ export default {
     value: { type: [String, Number], default: "" },
     multiline: { type: Boolean, default: false },
     flushLeft: { type: Boolean, default: false },
-    flushRight: { type: Boolean, default: false }
-  }
+    flushRight: { type: Boolean, default: false },
+  },
 };
 </script>
 

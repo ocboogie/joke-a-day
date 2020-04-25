@@ -15,32 +15,32 @@ export default {
   props: {
     animationDuration: {
       type: Number,
-      default: 1000
+      default: 1000,
     },
     size: {
       type: Number,
-      default: 50
+      default: 50,
     },
     color: {
       type: String,
-      default: "#fff"
-    }
+      default: "#fff",
+    },
   },
   computed: {
     spinnerStyle() {
       return {
         height: `${this.size}px`,
-        width: `${this.size}px`
-      }
+        width: `${this.size}px`,
+      };
     },
     orbitStyle() {
       return {
         borderColor: this.color,
-        animationDuration: `${this.animationDuration}ms`
-      }
-    }
-  }
-}
+        animationDuration: `${this.animationDuration}ms`,
+      };
+    },
+  },
+};
 </script>
 
 <style scoped>

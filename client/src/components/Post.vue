@@ -54,28 +54,28 @@ export default {
   props: {
     upvotes: {
       type: Number,
-      required: true
+      required: true,
     },
     content: {
       type: String,
-      required: true
+      required: true,
     },
     author: {
       type: Object,
-      required: true
+      required: true,
     },
     id: {
       type: String,
-      required: true
+      required: true,
     },
     userVote: {
       type: Number,
-      default: 0
+      default: 0,
     },
     active: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     upvote() {
@@ -92,8 +92,8 @@ export default {
           }
         `,
         variables: {
-          postId: this.id
-        }
+          postId: this.id,
+        },
       });
     },
     downvote() {
@@ -110,8 +110,8 @@ export default {
           }
         `,
         variables: {
-          postId: this.id
-        }
+          postId: this.id,
+        },
       });
     },
     unvote() {
@@ -124,11 +124,11 @@ export default {
           }
         `,
         variables: {
-          postId: this.id
-        }
+          postId: this.id,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

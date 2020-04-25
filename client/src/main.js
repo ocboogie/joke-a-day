@@ -10,9 +10,9 @@ Vue.config.productionTip = false;
 
 new Vue({
   data: {
-    meId: localStorage.getItem("meId")
+    meId: localStorage.getItem("meId"),
   },
   router,
   apolloProvider,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

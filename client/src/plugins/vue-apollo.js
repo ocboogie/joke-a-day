@@ -3,7 +3,7 @@ import VueApollo from "vue-apollo";
 import apolloClient from "../apollo";
 
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient: apolloClient,
 });
 
 Vue.use(VueApollo);

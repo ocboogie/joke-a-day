@@ -12,7 +12,7 @@ const {
   PORT,
   MAILGUN_API_KEY,
   MAILGUN_DOAMAIN_NAME,
-  MAILGUN_TEST_MODE
+  MAILGUN_TEST_MODE,
 } = process.env;
 
 export default {
@@ -26,5 +26,5 @@ export default {
   logLevel: LOG_LEVEL || "silly",
   mailgunApiKey: MAILGUN_API_KEY,
   mailgunDoamainName: MAILGUN_DOAMAIN_NAME,
-  mailgunTestMode: MAILGUN_TEST_MODE?.toLowerCase() == "true"
+  mailgunTestMode: MAILGUN_TEST_MODE?.toLowerCase() == "true",
 };

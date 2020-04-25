@@ -3,7 +3,7 @@
     <el-menu-item index="/">Home</el-menu-item>
     <template v-if="loggedIn">
       <el-submenu class="right" index="2-4">
-        <template slot="title"><i class="el-icon-user-solid"/></template>
+        <template slot="title"><i class="el-icon-user-solid" /></template>
         <el-menu-item index="/profile">Profile</el-menu-item>
         <el-menu-item @click="logout">Logout</el-menu-item>
       </el-submenu>
@@ -22,7 +22,7 @@ export default {
   computed: {
     loggedIn() {
       return getters.loggedIn();
-    }
+    },
   },
   methods: {
     async logout() {
@@ -31,12 +31,12 @@ export default {
           mutation {
             logout
           }
-        `
+        `,
       });
       mutations.loggedOut();
       this.$router.replace({ name: "home" });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -9,6 +9,6 @@ export default async () => {
     ...options,
     entities: models,
     synchronize: true,
-    dropSchema: true
+    dropSchema: true,
   });
 };

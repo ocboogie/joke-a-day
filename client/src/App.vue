@@ -14,7 +14,7 @@ import { store, mutations } from "./store";
 
 export default {
   components: {
-    Navbar
+    Navbar,
   },
   computed: {
     authenticationError() {
@@ -22,7 +22,7 @@ export default {
     },
     internalServerErrors() {
       return store.internalServerErrors;
-    }
+    },
   },
   watch: {
     authenticationError(message) {
@@ -32,7 +32,7 @@ export default {
       this.$notify({
         title: "Authentification error",
         type: "warning",
-        message
+        message,
       });
       this.$router.replace({ name: "login" });
       mutations.clearAuthenticationError();
@@ -47,11 +47,13 @@ export default {
         dangerouslyUseHTMLString: true,
         message: `Please try again. If this problem persists, contact support with the following id number${
           errors.length === 1 ? "" : "s"
-        }: ${errors.map(err => `<code>${err.extensions.id}</code>`).join(", ")}`
+        }: ${errors
+          .map((err) => `<code>${err.extensions.id}</code>`)
+          .join(", ")}`,
       });
       mutations.clearInternalServerErrors();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

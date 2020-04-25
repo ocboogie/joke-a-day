@@ -5,7 +5,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  Repository
+  Repository,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
@@ -15,10 +15,7 @@ import { Lazy } from ".";
 @Entity()
 export default class Session {
   public static hashSessionId(id: string) {
-    return crypto
-      .createHash("sha256")
-      .update(id)
-      .digest("base64");
+    return crypto.createHash("sha256").update(id).digest("base64");
   }
 
   @Field()
@@ -31,8 +28,8 @@ export default class Session {
   @Column()
   userId: string;
 
-  @Field(type => User)
-  @ManyToOne(type => User, { lazy: true, onDelete: "CASCADE" })
+  @Field((type) => User)
+  @ManyToOne((type) => User, { lazy: true, onDelete: "CASCADE" })
   @JoinColumn({ name: "userId" })
   user: Lazy<User>;
 

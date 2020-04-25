@@ -2,7 +2,7 @@
   <button
     :class="[
       { loading, 'flush-left': flushLeft, 'flush-right': flushRight },
-      `button-type-${type}`
+      `button-type-${type}`,
     ]"
     :disabled="loading"
     :type="nativeType"
@@ -18,19 +18,19 @@ export default {
   props: {
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     type: {
       type: String,
-      default: "primary"
+      default: "primary",
     },
     nativeType: {
       type: String,
-      default: "button"
+      default: "button",
     },
     flushLeft: { type: Boolean, default: false },
-    flushRight: { type: Boolean, default: false }
-  }
+    flushRight: { type: Boolean, default: false },
+  },
 };
 </script>
 

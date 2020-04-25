@@ -2,7 +2,7 @@ import {
   EntityRepository,
   Repository,
   FindOneOptions,
-  LessThanOrEqual
+  LessThanOrEqual,
 } from "typeorm";
 import Prompt from "../models/Prompt";
 
@@ -17,7 +17,7 @@ export default class PromptRepository extends Repository<Prompt> {
 
     return this.findOne({
       ...options,
-      where: { scheduled: now }
+      where: { scheduled: now },
     });
   }
 
@@ -30,7 +30,7 @@ export default class PromptRepository extends Repository<Prompt> {
 
     return this.find({
       ...options,
-      where: { scheduled: LessThanOrEqual(now) }
+      where: { scheduled: LessThanOrEqual(now) },
     });
   }
 
@@ -44,7 +44,7 @@ export default class PromptRepository extends Repository<Prompt> {
 
     return this.findOne({
       ...options,
-      where: { id, scheduled: LessThanOrEqual(now) }
+      where: { id, scheduled: LessThanOrEqual(now) },
     });
   }
 }

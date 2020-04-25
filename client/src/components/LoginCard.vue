@@ -34,9 +34,9 @@ export default {
       const {
         data: {
           login: {
-            user: { id }
-          }
-        }
+            user: { id },
+          },
+        },
       } = await this.$apollo.mutate({
         mutation: gql`
           mutation($email: String!, $password: String!) {
@@ -49,14 +49,14 @@ export default {
         `,
         variables: {
           email: this.email,
-          password: this.password
-        }
+          password: this.password,
+        },
       });
       // TODO: Factor out the similar logic in SignupCard
       mutations.loggedIn(id);
       this.$router.replace({ name: "home" });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -11,7 +11,7 @@ import {
   PubSubEngine,
   Publisher,
   FieldResolver,
-  Root
+  Root,
 } from "type-graphql";
 import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
@@ -20,7 +20,7 @@ import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 import vote from "./vote";
 
-@Resolver(of => Post)
+@Resolver((of) => Post)
 export default class {
   constructor(
     @InjectRepository(Post)
@@ -32,7 +32,7 @@ export default class {
     @Inject("logger") private logger: typeof LoggerInstance
   ) {}
 
-  @Mutation(returns => Post)
+  @Mutation((returns) => Post)
   async createPost(
     @Arg("promptId") promptId: string,
     @Arg("content") content: string,
@@ -53,7 +53,7 @@ export default class {
     const post = this.postRepository.create({
       promptId,
       author: user,
-      content
+      content,
     });
     await this.postRepository.insert(post);
     await publish(post);
@@ -61,12 +61,12 @@ export default class {
     return post;
   }
 
-  @FieldResolver(type => Number)
+  @FieldResolver((type) => Number)
   async upvotes(@Root() post: Post): Promise<number> {
     return post.upvotes;
   }
 
-  @FieldResolver(type => Number)
+  @FieldResolver((type) => Number)
   async userVote(
     @Root() post: Post,
     @CurrentUser(false) user?: User

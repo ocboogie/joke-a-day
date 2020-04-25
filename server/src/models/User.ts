@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
-  ManyToMany
+  ManyToMany,
 } from "typeorm";
 
 import Session from "./Session";
@@ -36,27 +36,15 @@ export default class User {
   @Column({ default: false })
   admin: boolean;
 
-  @OneToMany(
-    type => Session,
-    session => session.user,
-    { lazy: true }
-  )
+  @OneToMany((type) => Session, (session) => session.user, { lazy: true })
   sessions: Lazy<Session[]>;
 
-  @Field(type => [Prompt])
-  @ManyToMany(
-    type => Prompt,
-    prompt => prompt.winners,
-    { lazy: true }
-  )
+  @Field((type) => [Prompt])
+  @ManyToMany((type) => Prompt, (prompt) => prompt.winners, { lazy: true })
   wins: Lazy<Prompt[]>;
 
-  @Field(type => [Post])
-  @OneToMany(
-    type => Post,
-    post => post.author,
-    { lazy: true }
-  )
+  @Field((type) => [Post])
+  @OneToMany((type) => Post, (post) => post.author, { lazy: true })
   posts: Lazy<Post[]>;
 
   @CreateDateColumn()

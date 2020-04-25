@@ -24,35 +24,35 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: Home
+    component: Home,
   },
   {
     path: "/login",
     name: "login",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/Login.vue"),
-    beforeEnter: ifNotAuthenticated
+    beforeEnter: ifNotAuthenticated,
   },
   {
     path: "/signUp",
     name: "signUp",
     component: () =>
       import(/* webpackChunkName: "signUp" */ "../views/Signup.vue"),
-    beforeEnter: ifNotAuthenticated
+    beforeEnter: ifNotAuthenticated,
   },
   {
     path: "/profile",
     name: "profile",
     component: () =>
       import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
-    beforeEnter: ifAuthenticated
-  }
+    beforeEnter: ifAuthenticated,
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 export default router;

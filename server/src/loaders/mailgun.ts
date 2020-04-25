@@ -19,5 +19,5 @@ if (!apiKey || !domain || config.mailgunTestMode) {
 export default mailgun({
   apiKey,
   domain,
-  testMode
+  testMode,
 });

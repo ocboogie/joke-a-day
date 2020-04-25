@@ -15,7 +15,7 @@ import Post from "./Post.vue";
 
 export default {
   components: {
-    Post
+    Post,
   },
   computed: {
     sorted() {
@@ -23,18 +23,18 @@ export default {
       const clonedPosts = this.posts.slice();
 
       return clonedPosts.sort((postA, postB) => postB.upvotes - postA.upvotes);
-    }
+    },
   },
   props: {
     posts: {
       type: Array,
-      required: true
+      required: true,
     },
     active: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
 

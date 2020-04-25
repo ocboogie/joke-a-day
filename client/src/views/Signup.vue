@@ -8,8 +8,8 @@ import SignupCard from "../components/SignupCard.vue";
 
 export default {
   components: {
-    SignupCard
-  }
+    SignupCard,
+  },
 };
 </script>
 <style lang="scss" scoped>

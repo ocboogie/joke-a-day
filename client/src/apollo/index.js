@@ -27,5 +27,5 @@ const link = logoutLink
 export default new ApolloClient({
   link,
   cache: new InMemoryCache(),
-  connectToDevTools: true
+  connectToDevTools: true,
 });

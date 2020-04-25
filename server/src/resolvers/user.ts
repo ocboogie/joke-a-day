@@ -11,7 +11,7 @@ import argon2 from "argon2";
 import {
   ForbiddenError,
   AuthenticationError,
-  UserInputError
+  UserInputError,
 } from "apollo-server";
 import { Response } from "express";
 import { Context } from "../loaders/configureGraphqlServer";
@@ -29,11 +29,11 @@ async function saveSession(
     // TODO: Test when "rememberMe" is flase if the cookie will be a session cookie
     expires: rememberMe ? session.expires : undefined,
     httpOnly: true,
-    secure: !config.development
+    secure: !config.development,
   });
 }
 
-@Resolver(of => User)
+@Resolver((of) => User)
 export default class {
   constructor(
     @InjectRepository(User)
@@ -44,7 +44,7 @@ export default class {
     private readonly authService: AuthService
   ) {}
 
-  @Mutation(returns => LoginResult)
+  @Mutation((returns) => LoginResult)
   async signUp(@Arg("user") userInput: UserInfo, @Ctx() { res }: Context) {
     try {
       const { user, session, sessionId } = await this.authService.signUp(
@@ -55,7 +55,7 @@ export default class {
 
       return {
         user,
-        sessionId
+        sessionId,
       };
     } catch (err) {
       if (err instanceof EmailInUseError) {
@@ -65,7 +65,7 @@ export default class {
     }
   }
 
-  @Mutation(returns => LoginResult)
+  @Mutation((returns) => LoginResult)
   async login(
     @Arg("user") { email, password, rememberMe }: UserLogin,
     @Ctx() { res }: Context
@@ -81,7 +81,7 @@ export default class {
 
       return {
         user,
-        sessionId
+        sessionId,
       };
     } catch (err) {
       // FIXME: Use a better error
@@ -89,7 +89,7 @@ export default class {
     }
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation((returns) => Boolean)
   async logout(@Ctx() { req }: Context) {
     const { sessionId } = req.cookies;
     if (!sessionId) {
@@ -101,7 +101,7 @@ export default class {
     return true;
   }
 
-  @Mutation(returns => User)
+  @Mutation((returns) => User)
   async changeUsername(
     @CurrentUser() user: User,
     @Arg("userId") userId: string,
@@ -117,12 +117,12 @@ export default class {
     return user;
   }
 
-  @Query(returns => Boolean)
+  @Query((returns) => Boolean)
   signedIn(@CurrentUser(false) user: User) {
     return Boolean(user);
   }
 
-  @Query(returns => User)
+  @Query((returns) => User)
   me(@CurrentUser(true) user: User) {
     return user;
   }

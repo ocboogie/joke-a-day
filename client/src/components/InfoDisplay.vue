@@ -10,8 +10,8 @@ export default {
   props: {
     prompt: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     // ...mapState({
@@ -36,7 +36,7 @@ export default {
     // updateTimerDisplay() {
     //   this.now = Date.now();
     // }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

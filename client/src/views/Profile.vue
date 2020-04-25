@@ -22,11 +22,11 @@ export default {
   computed: {
     updated() {
       return this.originalMe.name !== this.me.name;
-    }
+    },
   },
   data: () => ({
     me: null,
-    originalMe: {}
+    originalMe: {},
   }),
   methods: {
     async update() {
@@ -40,13 +40,13 @@ export default {
         `,
         variables: {
           meId: store.meId,
-          username: this.me.name
-        }
+          username: this.me.name,
+        },
       });
 
       // The copy is done to make sure vue catches the change
       this.originalMe = { ...this.me };
-    }
+    },
   },
   apollo: {
     me: {
@@ -61,9 +61,9 @@ export default {
         Object.assign(this.originalMe, data.me);
 
         return data.me;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
