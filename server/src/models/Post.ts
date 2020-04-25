@@ -43,20 +43,4 @@ export default class Post {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  private _upvotes: number;
-
-  get upvotes() {
-    if (this._upvotes) {
-      return Promise.resolve(this._upvotes);
-    }
-    const voteRepository = getRepository(Vote);
-
-    return voteRepository
-      .createQueryBuilder()
-      .select("COALESCE(SUM(Vote.vote), 0)", "upvotes")
-      .where('"Vote"."postId" = :postId', { postId: this.id })
-      .getRawOne()
-      .then((vote) => Number(vote.upvotes));
-  }
 }

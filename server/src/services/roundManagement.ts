@@ -4,14 +4,28 @@ import PromptRepository from "../customRepos/Prompt";
 import LoggerInstance from "../loaders/logger";
 import User from "../models/User";
 import Prompt from "../models/Prompt";
+import Post from "../models/Post";
+import { Repository } from "typeorm";
+import Vote from "../models/Vote";
 
 @Service()
 export default class RoundManagement {
   constructor(
     @InjectRepository(PromptRepository)
     private readonly promptRepository: PromptRepository,
+    @InjectRepository(Vote)
+    private readonly voteRepository: Repository<Vote>,
     @Inject("logger") private logger: typeof LoggerInstance
   ) {}
+
+  public computeUpvotes(post: Post) {
+    return this.voteRepository
+      .createQueryBuilder()
+      .select("COALESCE(SUM(Vote.vote), 0)", "upvotes")
+      .where('"Vote"."postId" = :postId', { postId: post.id })
+      .getRawOne()
+      .then((vote) => Number(vote.upvotes));
+  }
 
   /**
    * Return the authors of the highest upvoted posts. Typically, this should
@@ -33,7 +47,7 @@ export default class RoundManagement {
     const winners: Set<User> = new Set();
 
     for (const post of posts) {
-      const upvotes = await post.upvotes;
+      const upvotes = await this.computeUpvotes(post);
       if (upvotes > max) {
         winners.clear();
         max = upvotes;

@@ -19,6 +19,7 @@ import PromptRepo from "../customRepos/Prompt";
 import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 import vote from "./vote";
+import RoundManagement from "../services/roundManagement";
 
 @Resolver((of) => Post)
 export default class {
@@ -29,7 +30,8 @@ export default class {
     private readonly promptRepository: PromptRepo,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    @Inject("logger") private logger: typeof LoggerInstance
+    @Inject("logger") private logger: typeof LoggerInstance,
+    private readonly roundManagementService: RoundManagement
   ) {}
 
   @Mutation((returns) => Post)
@@ -63,7 +65,7 @@ export default class {
 
   @FieldResolver((type) => Number)
   async upvotes(@Root() post: Post): Promise<number> {
-    return post.upvotes;
+    return this.roundManagementService.computeUpvotes(post);
   }
 
   @FieldResolver((type) => Number)
