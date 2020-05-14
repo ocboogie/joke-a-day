@@ -179,4 +179,17 @@ export default class AuthService {
 
     return this.sessionRepository.delete({ id: hashedId });
   }
+
+  /**
+   * This will return if the session is valid or not. If not, that session will
+   * be deleted from the database.
+   * @param session session to validate
+   */
+  async validateSession(session: Session): Promise<boolean> {
+    if (session.expires.getTime() < Date.now()) {
+      await this.sessionRepository.delete({ id: session.id });
+      return false;
+    }
+    return true;
+  }
 }

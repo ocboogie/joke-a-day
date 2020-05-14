@@ -4,6 +4,8 @@ import { Context } from "../loaders/configureGraphqlServer";
 import { getRepository } from "typeorm";
 import Session from "../models/Session";
 import User from "../models/User";
+import { Container } from "typedi";
+import AuthService from "../services/auth";
 
 async function getUserFromContext(context: Context) {
   if (context.user) {
@@ -19,12 +21,13 @@ async function getUserFromContext(context: Context) {
   const hashedSessionId = Session.hashSessionId(sessionId);
 
   const sessionRepository = getRepository(Session);
+  const authService = Container.get(AuthService);
   const session = await sessionRepository.findOne(
     { id: hashedSessionId },
     { relations: ["user"] }
   );
 
-  if (!session || !(await session.vaild(sessionRepository))) {
+  if (!session || !(await authService.validateSession(session))) {
     return;
   }
 
