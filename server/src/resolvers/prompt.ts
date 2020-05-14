@@ -71,6 +71,17 @@ export default class {
   }
 
   @Subscription({
+    topics: "POST_DELETED",
+    filter: ({ args, payload }) => payload.promptId === args.promptId,
+  })
+  postDeleted(
+    @Root() removedPost: Post,
+    @Arg("promptId") promptId: string
+  ): string {
+    return removedPost.id;
+  }
+
+  @Subscription({
     topics: "POST_UPDATED",
     filter: ({ args, payload }) => payload.promptId === args.promptId,
   })

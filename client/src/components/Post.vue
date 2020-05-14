@@ -44,6 +44,9 @@
           {{ author.name }}
         </router-link>
       </div>
+      <button type="button" class="delete-button" @click="deletePost">
+        X
+      </button>
     </div>
   </BaseCard>
 </template>
@@ -78,6 +81,18 @@ export default {
     },
   },
   methods: {
+    deletePost() {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postId: String!) {
+            deletePost(postId: $postId)
+          }
+        `,
+        variables: {
+          postId: this.id,
+        },
+      });
+    },
     upvote() {
       if (this.userVote > 0) {
         this.unvote();
@@ -198,6 +213,19 @@ $arrowCircleSize: 31.25px;
     padding: 10px;
     word-break: break-word;
     flex-grow: 1;
+    position: relative;
+    .delete-button {
+      position: absolute;
+      top: 5px;
+      right: 7.5px;
+      padding: 0;
+      border: none;
+      outline: 0;
+      background: 0 0;
+      cursor: pointer;
+      font-size: 14px;
+      color: $text-muted;
+    }
   }
   .author {
     font-size: 14px;

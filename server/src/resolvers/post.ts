@@ -14,12 +14,13 @@ import {
   Root,
 } from "type-graphql";
 import User from "../models/User";
-import { CurrentUser } from "../decorators/auth";
+import { CurrentUser, Admin } from "../decorators/auth";
 import PromptRepo from "../customRepos/Prompt";
 import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 import vote from "./vote";
 import RoundManagement from "../services/roundManagement";
+import { ForbiddenError } from "apollo-server";
 
 @Resolver((of) => Post)
 export default class {
@@ -61,6 +62,33 @@ export default class {
     await publish(post);
     this.logger.silly(`Created a new post: ${post.content}`, { post });
     return post;
+  }
+
+  @Mutation((returns) => Boolean)
+  async deletePost(
+    @Arg("postId") postId: string,
+    @CurrentUser() user: User,
+    @PubSub("POST_DELETED") publish: Publisher<Post>
+  ) {
+    const post = await this.postRepository.findOne(postId);
+    if (!post) {
+      // FIXME:
+      throw new Error("Post not found");
+    }
+
+    if (!user.canModify(post.authorId)) {
+      throw new ForbiddenError("You don't have access to delete this post");
+    }
+
+    await this.postRepository.delete(post.id);
+
+    publish(post);
+    this.logger.info(
+      `User "${user.name}" deleted post with content of "${post.content}"`,
+      { user, post }
+    );
+
+    return true;
   }
 
   @FieldResolver((type) => Number)

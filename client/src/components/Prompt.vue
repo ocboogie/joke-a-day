@@ -8,7 +8,7 @@
     >
       Create post
     </base-button>
-    <el-divider><div class="circle-in-divider" /></el-divider>
+    <el-divider><div class="circle-in-divider"/></el-divider>
     <Posts :active="active" :promptId="id" :posts="prompt.posts" />
   </div>
 </template>
@@ -135,6 +135,25 @@ export default {
           },
           updateQuery: (previousResult, { subscriptionData }) => {
             previousResult.prompt.posts.push(subscriptionData.data.postAdded);
+
+            return previousResult;
+          },
+        },
+        {
+          document: gql`
+            subscription($promptId: String!) {
+              postDeleted(promptId: $promptId)
+            }
+          `,
+          variables() {
+            return {
+              promptId: this.id,
+            };
+          },
+          updateQuery: (previousResult, { subscriptionData }) => {
+            previousResult.prompt.posts = previousResult.prompt.posts.filter(
+              (post) => post.id !== subscriptionData.data.postDeleted
+            );
 
             return previousResult;
           },

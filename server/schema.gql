@@ -15,6 +15,7 @@ type LoginResult {
 
 type Mutation {
   createPost(content: String!, promptId: String!): Post!
+  deletePost(postId: String!): Boolean!
   createPrompt(prompt: PromptInfo!): Prompt!
   manuallyFinishRound: Boolean!
   signUp(user: UserInfo!): LoginResult!
@@ -62,6 +63,7 @@ type Session {
 
 type Subscription {
   postAdded(promptId: String!): Post!
+  postDeleted(promptId: String!): String!
   postUpdated(promptId: String!): Post!
 }
 
