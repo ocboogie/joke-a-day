@@ -50,6 +50,10 @@ export default class User {
   @CreateDateColumn()
   createdAt: Date;
 
+  /**
+   * Returns if the this user can modify a user's data.
+   * @param userId the user's id that would be modified
+   */
   canModify(userId: string): boolean {
     return userId == this.id || this.admin;
   }
