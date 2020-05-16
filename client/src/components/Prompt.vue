@@ -8,7 +8,7 @@
     >
       Create post
     </base-button>
-    <el-divider><div class="circle-in-divider"/></el-divider>
+    <el-divider><div class="circle-in-divider" /></el-divider>
     <Posts :active="active" :promptId="id" :posts="prompt.posts" />
   </div>
 </template>

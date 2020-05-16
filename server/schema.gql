@@ -14,32 +14,32 @@ type LoginResult {
 }
 
 type Mutation {
+  changeUsername(userId: String!, username: String!): User!
   createPost(content: String!, promptId: String!): Post!
-  deletePost(postId: String!): Boolean!
   createPrompt(prompt: PromptInfo!): Prompt!
-  manuallyFinishRound: Boolean!
-  signUp(user: UserInfo!): LoginResult!
+  deletePost(postId: String!): Boolean!
+  downvote(postId: String!): Post!
   login(user: UserLogin!): LoginResult!
   logout: Boolean!
-  changeUsername(username: String!, userId: String!): User!
-  upvote(postId: String!): Post!
-  downvote(postId: String!): Post!
+  manuallyFinishRound: Boolean!
+  signUp(user: UserInfo!): LoginResult!
   unvote(postId: String!): Post!
+  upvote(postId: String!): Post!
 }
 
 type Post {
-  id: String!
-  content: String!
   author: User!
+  content: String!
+  id: String!
   upvotes: Float!
   userVote: Float!
 }
 
 type Prompt {
-  id: String!
   content: String!
-  scheduled: String!
+  id: String!
   posts: [Post!]!
+  scheduled: String!
   winners: [User!]!
 }
 
@@ -49,16 +49,11 @@ input PromptInfo {
 }
 
 type Query {
-  prompts: [Prompt!]!
-  prompt(id: String!): Prompt
   currentPrompt: Prompt
-  signedIn: Boolean!
   me: User!
-}
-
-type Session {
-  id: String!
-  user: User!
+  prompt(id: String!): Prompt
+  prompts: [Prompt!]!
+  signedIn: Boolean!
 }
 
 type Subscription {
@@ -68,22 +63,17 @@ type Subscription {
 }
 
 type User {
+  email: String!
   id: String!
-  email: String!
   name: String!
-  wins: [Prompt!]!
   posts: [Post!]!
-}
-
-input UserCredentials {
-  email: String!
-  password: String!
+  wins: [Prompt!]!
 }
 
 input UserInfo {
   email: String!
-  password: String!
   name: String!
+  password: String!
 }
 
 input UserLogin {
