@@ -7,6 +7,7 @@ import Vue from "vue";
 // like Vuex
 export const store = Vue.observable({
   meId: localStorage.getItem("meId"),
+  isAdmin: Boolean(localStorage.getItem("isAdmin")),
   authenticationError: null,
   internalServerErrors: [],
 });
@@ -15,13 +16,21 @@ export const mutations = {
   // These are past tense because they should not be used to login but instead
   // once you are already logged in. The login request is not done in the
   // mutation.
-  loggedIn(meId) {
+  loggedIn(meId, admin = false) {
     store.meId = meId;
     localStorage.setItem("meId", meId);
+    store.isAdmin = admin;
+    if (admin) {
+      // The "true" string doesn't have to be "true", it just needs to be
+      // truthy since we're just using it as a flag.
+      localStorage.setItem("isAdmin", "true");
+    }
   },
   loggedOut() {
     store.meId = null;
     localStorage.removeItem("meId");
+    store.isAdmin = false;
+    localStorage.removeItem("isAdmin");
   },
 
   setAuthenticationError(error) {

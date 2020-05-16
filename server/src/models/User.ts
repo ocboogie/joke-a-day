@@ -33,6 +33,7 @@ export default class User {
   @Column({ length: 128 })
   password: string;
 
+  @Field()
   @Column({ default: false })
   admin: boolean;
 

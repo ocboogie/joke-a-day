@@ -50,7 +50,7 @@ export default {
         const {
           data: {
             signUp: {
-              user: { id },
+              user: { id, admin },
             },
           },
         } = await this.$apollo.mutate({
@@ -61,6 +61,7 @@ export default {
               ) {
                 user {
                   id
+                  admin
                 }
               }
             }
@@ -71,7 +72,7 @@ export default {
             password: this.password,
           },
         });
-        mutations.loggedIn(id);
+        mutations.loggedIn(id, admin);
         this.$router.replace({ name: "home" });
       } catch (err) {
         this.error = err;

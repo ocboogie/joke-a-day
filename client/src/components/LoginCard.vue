@@ -34,7 +34,7 @@ export default {
       const {
         data: {
           login: {
-            user: { id },
+            user: { id, admin },
           },
         },
       } = await this.$apollo.mutate({
@@ -43,6 +43,7 @@ export default {
             login(user: { email: $email, password: $password }) {
               user {
                 id
+                admin
               }
             }
           }
@@ -53,7 +54,7 @@ export default {
         },
       });
       // TODO: Factor out the similar logic in SignupCard
-      mutations.loggedIn(id);
+      mutations.loggedIn(id, admin);
       this.$router.replace({ name: "home" });
     },
   },

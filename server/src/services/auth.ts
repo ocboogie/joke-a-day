@@ -111,6 +111,7 @@ export default class AuthService {
 
     const user = this.userRepository.create({
       ...userInput,
+      // FIXME: DON'T FORGET TO REMOVE ME
       admin: true,
       password: hashedPassword,
     });

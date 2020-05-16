@@ -63,6 +63,7 @@ type Subscription {
 }
 
 type User {
+  admin: Boolean!
   email: String!
   id: String!
   name: String!

@@ -44,7 +44,12 @@
           {{ author.name }}
         </router-link>
       </div>
-      <button type="button" class="delete-button" @click="deletePost">
+      <button
+        v-if="deletable"
+        type="button"
+        class="delete-button"
+        @click="deletePost"
+      >
         X
       </button>
     </div>
@@ -52,6 +57,7 @@
 </template>
 <script>
 import gql from "graphql-tag";
+import { store } from "../store";
 
 export default {
   props: {
@@ -78,6 +84,11 @@ export default {
     active: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    deletable() {
+      return store.isAdmin || store.meId == this.author.id;
     },
   },
   methods: {
