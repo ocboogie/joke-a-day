@@ -58,6 +58,7 @@
 <script>
 import gql from "graphql-tag";
 import { store } from "../store";
+import { MessageBox } from "element-ui";
 
 export default {
   props: {
@@ -93,15 +94,25 @@ export default {
   },
   methods: {
     deletePost() {
-      this.$apollo.mutate({
-        mutation: gql`
-          mutation($postId: String!) {
-            deletePost(postId: $postId)
-          }
-        `,
-        variables: {
-          postId: this.id,
-        },
+      MessageBox.confirm(
+        "This will permanently the delete and is unrecoverable",
+        "Delete post?",
+        {
+          confirmButtonText: "Delete",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      ).then(() => {
+        this.$apollo.mutate({
+          mutation: gql`
+            mutation($postId: String!) {
+              deletePost(postId: $postId)
+            }
+          `,
+          variables: {
+            postId: this.id,
+          },
+        });
       });
     },
     upvote() {
