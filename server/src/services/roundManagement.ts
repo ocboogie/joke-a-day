@@ -2,6 +2,7 @@ import { Service, Inject } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import PromptRepository from "../customRepos/Prompt";
 import LoggerInstance from "../loaders/logger";
+import MailgunInstance from "../loaders/mailgun";
 import User from "../models/User";
 import Prompt from "../models/Prompt";
 import Post from "../models/Post";
@@ -15,7 +16,8 @@ export default class RoundManagement {
     private readonly promptRepository: PromptRepository,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    @Inject("logger") private logger: typeof LoggerInstance
+    @Inject("logger") private logger: typeof LoggerInstance,
+    @Inject("mailgun") private mailgun: typeof MailgunInstance
   ) {}
 
   public computeUpvotes(post: Post) {
@@ -25,6 +27,41 @@ export default class RoundManagement {
       .where('"Vote"."postId" = :postId', { postId: post.id })
       .getRawOne()
       .then((vote) => Number(vote.upvotes));
+  }
+
+  /**
+   * This will compute the winners of this round, save them in the db
+   * and email them.
+   *
+   * @remarks this is a pretty heavy funciton and should only been used in a
+   * queue
+   *
+   * @param prompt the prompt to finish
+   */
+  public async finishRound(prompt: Prompt) {
+    const winners = await this.computeWinners(prompt);
+
+    if (winners) {
+      prompt.winners = winners;
+      // FIXME: This try block shouldn't be here and will have to be addressed
+      //        by #5
+      try {
+        await Promise.all(
+          winners.map((user) =>
+            this.mailgun.messages().send({
+              from: "Test 123 <hello@world.com>",
+              to: user.email,
+              subject: "You won!",
+              text: "You've won a prompt",
+            })
+          )
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    await this.promptRepository.save(prompt);
   }
 
   /**
