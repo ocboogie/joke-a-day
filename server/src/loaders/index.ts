@@ -5,7 +5,7 @@ import "../jobs";
 import startCronJobs from "./startCronJobs";
 
 export default async () => {
-  await dependencyInjectorLoader();
+  dependencyInjectorLoader();
   await connectToDb();
   startCronJobs();
   return configureGraphqlServer();
