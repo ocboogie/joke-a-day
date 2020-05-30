@@ -39,6 +39,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.posts {
+  overflow: hidden;
+}
 .post-list-enter-active,
 .post-list-leave-active {
   transition: all 0.25s ease-out;
