@@ -1,26 +1,26 @@
 <template>
-  <BaseCard class="login-card">
+  <el-card class="login-card">
     <template slot="header">Login</template>
     <form @submit.prevent="submit">
-      <BaseInput
+      <el-input
         class="form-input"
         v-model="email"
         type="text"
         placeholder="Email"
         autocomplete="username"
       />
-      <BaseInput
+      <el-input
         class="form-input"
         v-model="password"
         type="password"
         placeholder="Password"
         autocomplete="current-password"
       />
-      <BaseButton class="form-input" native-type="submit">
+      <el-button class="form-input" type="primary" native-type="submit">
         Login
-      </BaseButton>
+      </el-button>
     </form>
-  </BaseCard>
+  </el-card>
 </template>
 <script>
 import { mutations } from "../store";

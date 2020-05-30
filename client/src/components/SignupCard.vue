@@ -1,22 +1,22 @@
 <template>
-  <BaseCard class="signup-card">
+  <el-card class="signup-card">
     <template slot="header">Sign Up</template>
     <form @submit.prevent="submit">
-      <BaseInput
+      <el-input
         class="form-input"
         v-model="username"
         type="text"
         placeholder="Username"
         autocomplete="username"
       />
-      <BaseInput
+      <el-input
         class="form-input"
         v-model="email"
         type="text"
         placeholder="Email"
         autocomplete="username"
       />
-      <BaseInput
+      <el-input
         class="form-input"
         v-model="password"
         type="password"
@@ -30,11 +30,11 @@
           </template>
         </div>
       </transition>
-      <BaseButton class="form-input" native-type="submit">
+      <el-button class="form-input" type="primary" native-type="submit">
         Sign Up
-      </BaseButton>
+      </el-button>
     </form>
-  </BaseCard>
+  </el-card>
 </template>
 <script>
 // TODO: Factor out the similarities with LoginCard

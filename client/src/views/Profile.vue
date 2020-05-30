@@ -1,17 +1,22 @@
 <template>
   <div class="profile">
-    <BaseCard class="profile-card">
+    <el-card class="profile-card">
       <template slot="header">Profile</template>
       <template v-if="me">
         <label>
           <div class="label-text">Username</div>
-          <base-input class="field-input" v-model="me.name" />
+          <el-input class="field-input" v-model="me.name" />
         </label>
-        <base-button :disabled="!updated" class="update" @click.native="update">
+        <el-button
+          type="primary"
+          :disabled="!updated"
+          class="update"
+          @click.native="update"
+        >
           Update
-        </base-button>
+        </el-button>
       </template>
-    </BaseCard>
+    </el-card>
   </div>
 </template>
 <script>
