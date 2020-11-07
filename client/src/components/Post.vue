@@ -102,18 +102,20 @@ export default {
           cancelButtonText: "Cancel",
           type: "warning",
         }
-      ).then(() => {
-        this.$apollo.mutate({
-          mutation: gql`
-            mutation($postId: String!) {
-              deletePost(postId: $postId)
-            }
-          `,
-          variables: {
-            postId: this.id,
-          },
-        });
-      });
+      )
+        .then(() => {
+          this.$apollo.mutate({
+            mutation: gql`
+              mutation($postId: String!) {
+                deletePost(postId: $postId)
+              }
+            `,
+            variables: {
+              postId: this.id,
+            },
+          });
+        })
+        .catch(() => {});
     },
     upvote() {
       if (this.userVote > 0) {

@@ -40,9 +40,11 @@ export default {
         confirmButtonText: "Post",
         cancelButtonText: "Cancel",
         inputErrorMessage: "Invalid post",
-      }).then(({ value }) => {
-        this.createPost(value);
-      });
+      })
+        .then(({ value }) => {
+          this.createPost(value);
+        })
+        .catch(() => {});
     },
     createPost(postContent) {
       this.$apollo.mutate({
