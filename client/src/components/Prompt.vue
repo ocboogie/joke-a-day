@@ -106,15 +106,6 @@ export default {
               promptId: this.id,
             };
           },
-          updateQuery: (previousResult, { subscriptionData }) => {
-            const postUpdated = subscriptionData.data.postUpdated;
-            const updatedPost = previousResult.prompt.posts.find(
-              (post) => postUpdated.id == post.id
-            );
-            Object.assign(updatedPost, postUpdated);
-
-            return previousResult;
-          },
         },
         {
           document: gql`
@@ -137,9 +128,11 @@ export default {
             };
           },
           updateQuery: (previousResult, { subscriptionData }) => {
-            previousResult.prompt.posts.push(subscriptionData.data.postAdded);
-
-            return previousResult;
+            return {
+              prompt: {
+                posts: subscriptionData.data.postAdded,
+              },
+            };
           },
         },
         {
@@ -154,11 +147,13 @@ export default {
             };
           },
           updateQuery: (previousResult, { subscriptionData }) => {
-            previousResult.prompt.posts = previousResult.prompt.posts.filter(
-              (post) => post.id !== subscriptionData.data.postDeleted
-            );
-
-            return previousResult;
+            return {
+              prompt: {
+                posts: previousResult.prompt.posts.filter(
+                  (post) => post.id !== subscriptionData.data.postDeleted
+                ),
+              },
+            };
           },
         },
       ],
