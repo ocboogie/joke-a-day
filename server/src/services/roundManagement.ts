@@ -8,6 +8,7 @@ import Prompt from "../models/Prompt";
 import Post from "../models/Post";
 import { Repository } from "typeorm";
 import Vote from "../models/Vote";
+import MailService from "./mail";
 
 @Service()
 export default class RoundManagement {
@@ -17,7 +18,8 @@ export default class RoundManagement {
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
     @Inject("logger") private logger: typeof LoggerInstance,
-    @Inject("mailgun") private mailgun: typeof MailgunInstance
+    @Inject("mailgun") private mailgun: typeof MailgunInstance,
+    private readonly mailService: MailService
   ) {}
 
   public computeUpvotes(post: Post) {
@@ -48,12 +50,7 @@ export default class RoundManagement {
       try {
         await Promise.all(
           winners.map((user) =>
-            this.mailgun.messages().send({
-              from: "Test 123 <hello@world.com>",
-              to: user.email,
-              subject: "You won!",
-              text: "You've won a prompt",
-            })
+            this.mailService.sendEmail(MailService.messages.win, user.email)
           )
         );
       } catch (err) {
