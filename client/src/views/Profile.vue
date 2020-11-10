@@ -2,7 +2,7 @@
   <div class="profile">
     <el-card class="profile-card">
       <template slot="header">Profile</template>
-      <template v-if="me">
+      <template v-if="originalMe">
         <label>
           <div class="label-text">Username</div>
           <el-input class="field-input" v-model="me.name" />
@@ -30,8 +30,8 @@ export default {
     },
   },
   data: () => ({
-    me: null,
-    originalMe: {},
+    me: {},
+    originalMe: null,
   }),
   methods: {
     async update() {
@@ -49,12 +49,11 @@ export default {
         },
       });
 
-      // The copy is done to make sure vue catches the change
       this.originalMe = { ...this.me };
     },
   },
   apollo: {
-    me: {
+    originalMe: {
       query: gql`
         {
           me {
@@ -63,7 +62,7 @@ export default {
         }
       `,
       update(data) {
-        Object.assign(this.originalMe, data.me);
+        this.me = { ...data.me };
 
         return data.me;
       },
