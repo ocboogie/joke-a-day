@@ -1,4 +1,4 @@
-import { HttpLink } from "apollo-link-http";
+import { HttpLink } from "@apollo/client/core";
 
 export default new HttpLink({
   credentials: "include",

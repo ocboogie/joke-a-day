@@ -1,7 +1,5 @@
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { split } from "apollo-link";
-import { getMainDefinition } from "apollo-utilities";
+import { ApolloClient, InMemoryCache, split } from "@apollo/client/core";
+import { getMainDefinition } from "@apollo/client/utilities";
 import httpLink from "./links/httpLink";
 import wsLink from "./links/wsLink";
 import logoutLink from "./links/logoutLink";
