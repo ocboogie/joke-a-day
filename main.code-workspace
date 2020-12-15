@@ -1,12 +1,12 @@
 {
   "folders": [
 	{
-		"name": "client",
-		"path": "client"
+		"name": "frontend",
+		"path": "frontend"
 	},
 	{
-		"name": "server",
-		"path": "server"
+		"name": "backend",
+		"path": "backend"
 	}
 ],
   "settings": {}
