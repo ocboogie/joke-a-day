@@ -1,0 +1,70 @@
+services:
+  frontend:
+    build: 
+      context: frontend
+      target: development
+    environment:
+      - PORT=${FRONTEND_PORT}
+        # TODO: Update the name for these
+      - VUE_APP_GRAPHQL_HTTP=${GRAPHQL_HTTP}
+      - VUE_APP_GRAPHQL_WS=${GRAPHQL_WS}
+    networks:
+      - public
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    volumes:
+      - ./frontend/src:/code/src:ro
+      - ./frontend/package.json:/code/package.json
+      - ./frontend/yarn.lock:/code/yarn.lock
+    depends_on:
+      - backend
+  backend:
+    build: 
+      context: backend
+    environment:
+      - PORT=${BACKEND_PORT}
+      - DATABASE_NAME
+      - DATABASE_USERNAME
+      - DATABASE_PASSWORD
+      - DATABASE_HOST
+      - REDIS_PORT
+      - REDIS_HOST
+      - MAILGUN_API_KEY
+      - MAILGUN_DOAMAIN_NAME
+      - MAILGUN_TEST_MODE
+    networks:
+      - private
+      - public
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    volumes:
+      - ./backend/src:/code/src:ro
+      - ./backend/package.json:/code/package.json
+      - ./backend/yarn.lock:/code/yarn.lock
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - private
+    ports:
+      - 5432:${DATABASE_PORT}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  redis:
+    image: redis:6.0.9-alpine
+    networks:
+      - private
+    ports:
+      - 6379:${REDIS_PORT}
+networks:
+  public:
+  private:
+volumes:
+  db-data:

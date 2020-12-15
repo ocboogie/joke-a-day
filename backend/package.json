@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --no-notify ./src/index.ts",
+    "dev": "ts-node-dev --respawn --no-notify --poll ./src/index.ts",
     "start": "node dist/index.js"
   },
   "dependencies": {
