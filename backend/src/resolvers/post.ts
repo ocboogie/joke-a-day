@@ -1,6 +1,5 @@
 import Post from "../models/Post";
 import { Repository } from "typeorm";
-import LoggerInstance from "../loaders/logger";
 import { Inject } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import {
@@ -8,7 +7,6 @@ import {
   Mutation,
   Arg,
   PubSub,
-  PubSubEngine,
   Publisher,
   FieldResolver,
   Root,
@@ -16,11 +14,10 @@ import {
 import User from "../models/User";
 import { CurrentUser, Admin } from "../decorators/auth";
 import PromptRepo from "../customRepos/Prompt";
-import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
-import vote from "./vote";
 import RoundManagement from "../services/roundManagement";
 import { ForbiddenError } from "apollo-server";
+import { Logger } from "winston";
 
 @Resolver((of) => Post)
 export default class {
@@ -31,7 +28,7 @@ export default class {
     private readonly promptRepository: PromptRepo,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    @Inject("logger") private logger: typeof LoggerInstance,
+    @Inject("logger") private logger: Logger,
     private readonly roundManagementService: RoundManagement
   ) {}
 

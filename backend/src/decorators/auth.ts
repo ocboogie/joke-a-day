@@ -1,9 +1,8 @@
 import { createParamDecorator, createMethodDecorator } from "type-graphql";
 import { AuthenticationError, ForbiddenError } from "apollo-server";
-import { Context } from "../loaders/configureGraphqlServer";
+import { Context } from "../initialization/configureGraphqlServer";
 import { getRepository } from "typeorm";
 import Session from "../models/Session";
-import User from "../models/User";
 import { Container } from "typedi";
 import AuthService from "../services/auth";
 

@@ -1,8 +1,6 @@
-import { Service, Inject } from "typedi";
+import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import PromptRepository from "../customRepos/Prompt";
-import LoggerInstance from "../loaders/logger";
-import MailgunInstance from "../loaders/mailgun";
 import User from "../models/User";
 import Prompt from "../models/Prompt";
 import Post from "../models/Post";
@@ -17,8 +15,6 @@ export default class RoundManagement {
     private readonly promptRepository: PromptRepository,
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
-    @Inject("logger") private logger: typeof LoggerInstance,
-    @Inject("mailgun") private mailgun: typeof MailgunInstance,
     private readonly mailService: MailService
   ) {}
 

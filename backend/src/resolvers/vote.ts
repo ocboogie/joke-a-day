@@ -1,19 +1,9 @@
 import Post from "../models/Post";
 import { Repository } from "typeorm";
-import LoggerInstance from "../loaders/logger";
-import { Inject } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  PubSub,
-  PubSubEngine,
-  Publisher,
-} from "type-graphql";
+import { Resolver, Mutation, Arg, PubSub, Publisher } from "type-graphql";
 import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
-import Prompt from "../models/Prompt";
 import Vote from "../models/Vote";
 
 @Resolver((of) => Post)
@@ -22,8 +12,7 @@ export default class {
     @InjectRepository(Vote)
     private readonly voteRepository: Repository<Vote>,
     @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
-    @Inject("logger") private logger: typeof LoggerInstance
+    private readonly postRepository: Repository<Post>
   ) {}
 
   async vote(postId: string, user: User, voteValue: number) {

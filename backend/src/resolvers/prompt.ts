@@ -3,30 +3,25 @@ import {
   Query,
   Resolver,
   Mutation,
-  Ctx,
-  Authorized,
   Subscription,
   Root,
 } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository, Raw, LessThanOrEqual } from "typeorm";
-import LoggerInstance from "../loaders/logger";
 import { Inject } from "typedi";
-import { Admin, CurrentUser } from "../decorators/auth";
+import { Admin } from "../decorators/auth";
 import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
 import { PromptInfo } from "../types/prompt";
-import User from "../models/User";
 import Post from "../models/Post";
-import post from "./post";
 import { finishRound } from "../queues";
+import { Logger } from "winston";
 
 @Resolver((of) => Prompt)
 export default class {
   constructor(
     @InjectRepository(PromptRepo)
     private readonly promptRepository: PromptRepo,
-    @Inject("logger") private logger: typeof LoggerInstance
+    @Inject("logger") private logger: Logger
   ) {}
 
   @Admin()

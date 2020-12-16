@@ -1,6 +1,6 @@
 import { Service, Inject } from "typedi";
-import MailgunInstance from "../loaders/mailgun";
-import LoggerInstance from "../loaders/logger";
+import { Logger } from "winston";
+import { Mailgun } from "mailgun-js";
 
 export interface Message {
   subject: string;
@@ -10,8 +10,8 @@ export interface Message {
 @Service()
 export default class MailService {
   constructor(
-    @Inject("logger") private logger: typeof LoggerInstance,
-    @Inject("mailgun") private mailgun: typeof MailgunInstance
+    @Inject("logger") private logger: Logger,
+    @Inject("mailgun") private mailgun: Mailgun
   ) {}
 
   public static messages: { [name: string]: Message } = {
