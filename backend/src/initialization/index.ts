@@ -5,7 +5,9 @@ import configureGraphqlServer from "./configureGraphqlServer";
 import startCronJobs from "./startCronJobs";
 import createLogger from "./createLogger";
 import createMailgun from "./createMailgun";
+import seed from "./seed";
 import "../jobs";
+import config from "../config";
 
 export default async () => {
   Container.set("logger", createLogger());
@@ -16,6 +18,10 @@ export default async () => {
 
   await createTypeORMConnection();
   startCronJobs();
+
+  if (config.development) {
+    seed();
+  }
 
   return configureGraphqlServer();
 };
