@@ -3,9 +3,9 @@ import { Service, Inject } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
 import argon2 from "argon2";
+import { Logger } from "winston";
 import Session from "../models/Session";
 import User from "../models/User";
-import LoggerInstance from "../loaders/logger";
 import config from "../config";
 import { UserInfo, UserLogin } from "../types/user";
 
@@ -57,7 +57,7 @@ export default class AuthService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Session)
     private readonly sessionRepository: Repository<Session>,
-    @Inject("logger") private logger: typeof LoggerInstance
+    @Inject("logger") private logger: Logger
   ) {}
 
   /**
