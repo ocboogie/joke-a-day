@@ -22,7 +22,7 @@ export type Context = ReturnType<typeof context>;
 
 export default async () => {
   const schema = await buildSchema({
-    resolvers: resolvers,
+    resolvers,
     emitSchemaFile: true,
     container: Container,
   });
