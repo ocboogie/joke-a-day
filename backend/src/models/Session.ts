@@ -1,12 +1,5 @@
 import crypto from "crypto";
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Repository,
-} from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
 import { Lazy } from ".";

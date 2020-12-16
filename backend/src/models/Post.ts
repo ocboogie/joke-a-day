@@ -2,18 +2,14 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany,
   ManyToOne,
   CreateDateColumn,
-  Repository,
   JoinColumn,
-  getRepository,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
 import { Lazy } from ".";
 import Prompt from "./Prompt";
-import Vote from "./Vote";
 
 @ObjectType()
 @Entity()

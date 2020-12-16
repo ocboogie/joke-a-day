@@ -11,7 +11,6 @@ import { Logger } from "winston";
 import resolvers from "../resolvers";
 import cookieParser from "cookie-parser";
 import User from "../models/User";
-import config from "../config";
 
 const context = ({ req, res }: ExpressContext) => ({
   req,
@@ -55,7 +54,7 @@ export default async () => {
     // resolver.
     context: (ctx) => ctx.connection?.context || ctx,
     subscriptions: {
-      async onConnect(connectionParams, webSocket) {
+      async onConnect(_connectionParams, webSocket) {
         // webSocket.upgradeReq isn't ran through the express middleware
         // so we have to do it manually
         const req = await new Promise((resolve) => {

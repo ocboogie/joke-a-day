@@ -1,14 +1,12 @@
-import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
+import { Arg, Query, Resolver, Mutation, Ctx } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
-import { Logger } from "winston";
 import {
   ForbiddenError,
   AuthenticationError,
   UserInputError,
 } from "apollo-server";
 import { Response } from "express";
-import { Inject } from "typedi";
 import { Context } from "../initialization/configureGraphqlServer";
 import { CurrentUser } from "../decorators/auth";
 import AuthService, { EmailInUseError } from "../services/auth";
@@ -36,9 +34,6 @@ export default class {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Session)
-    private readonly sessionRepository: Repository<Session>,
-    @Inject("logger") private logger: Logger,
     private readonly authService: AuthService
   ) {}
 
