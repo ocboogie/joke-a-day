@@ -1,23 +1,21 @@
-import crypto from "crypto";
 import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
-import { UserInfo, UserLogin, LoginResult } from "../types/user";
-import Session from "../models/Session";
-import User from "../models/User";
-import config from "../config";
-import LoggerInstance from "../loaders/logger";
-import argon2 from "argon2";
+import { Logger } from "winston";
 import {
   ForbiddenError,
   AuthenticationError,
   UserInputError,
 } from "apollo-server";
 import { Response } from "express";
-import { Context } from "../loaders/configureGraphqlServer";
+import { Inject } from "typedi";
+import { Context } from "../initialization/configureGraphqlServer";
 import { CurrentUser } from "../decorators/auth";
 import AuthService, { EmailInUseError } from "../services/auth";
-import { Inject } from "typedi";
+import { UserInfo, UserLogin, LoginResult } from "../types/user";
+import Session from "../models/Session";
+import User from "../models/User";
+import config from "../config";
 
 async function saveSession(
   res: Response,
@@ -40,7 +38,7 @@ export default class {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Session)
     private readonly sessionRepository: Repository<Session>,
-    @Inject("logger") private logger: typeof LoggerInstance,
+    @Inject("logger") private logger: Logger,
     private readonly authService: AuthService
   ) {}
 

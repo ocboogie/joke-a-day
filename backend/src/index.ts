@@ -1,9 +1,9 @@
 import "reflect-metadata";
-import loaders from "./loaders";
+import initialize from "./initialization";
 import config from "./config";
 
 async function bootstrap() {
-  const { server, app, httpServer } = await loaders();
+  const { server, app, httpServer } = await initialize();
 
   httpServer.listen(config.port, () => {
     console.log(

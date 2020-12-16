@@ -1,16 +1,16 @@
 import http from "http";
-import { buildSchema, AuthChecker } from "type-graphql";
+import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
 import express from "express";
 import { ApolloServer, ApolloError } from "apollo-server-express";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { GraphQLError } from "graphql";
 import { v4 } from "uuid";
+import { Logger } from "winston";
 
 import resolvers from "../resolvers";
 import cookieParser from "cookie-parser";
 import User from "../models/User";
-import LoggerInstance from "./logger";
 import config from "../config";
 
 const context = ({ req, res }: ExpressContext) => ({
@@ -35,7 +35,7 @@ export default async () => {
       if (error.originalError instanceof ApolloError) {
         return error;
       }
-      const logger = Container.get("logger") as typeof LoggerInstance;
+      const logger = Container.get("logger") as Logger;
 
       const errId = v4();
       logger.error(error.message, { error, errId });

@@ -1,14 +1,13 @@
 import { Container } from "typedi";
 import { getCustomRepository } from "typeorm";
-import MailgunInstance from "../loaders/mailgun";
-import LoggerInstance from "../loaders/logger";
+import { Logger } from "winston";
 import { finishRound } from "../queues";
 import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
 import RoundManagement from "../services/roundManagement";
 
 finishRound.process(async (job) => {
-  const logger = Container.get("logger") as typeof LoggerInstance;
+  const logger = Container.get("logger") as Logger;
   const roundManagement = Container.get(RoundManagement);
   const promptRepository = getCustomRepository(PromptRepo);
   logger.info("Starting to finish the round");
