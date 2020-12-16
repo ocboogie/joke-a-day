@@ -8,14 +8,14 @@ import createMailgun from "./createMailgun";
 import "../jobs";
 
 export default async () => {
-  Container.set("logger", createLogger);
+  Container.set("logger", createLogger());
   // createMailgun must go after logger because it uses the logger
-  Container.set("mailgun", createMailgun);
+  Container.set("mailgun", createMailgun());
+
+  TypeORM.useContainer(Container);
 
   await createTypeORMConnection();
   startCronJobs();
-
-  TypeORM.useContainer(Container);
 
   return configureGraphqlServer();
 };
