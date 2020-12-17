@@ -95,7 +95,7 @@ export default {
   methods: {
     deletePost() {
       MessageBox.confirm(
-        "This will permanently the delete and is unrecoverable",
+        "This post will be permanently deleted and is undoable.",
         "Delete post?",
         {
           confirmButtonText: "Delete",
