@@ -2,7 +2,11 @@ import http from "http";
 import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
 import express from "express";
-import { ApolloServer, ApolloError } from "apollo-server-express";
+import {
+  ApolloServer,
+  ApolloError,
+  ValidationError,
+} from "apollo-server-express";
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { GraphQLError } from "graphql";
 import { v4 } from "uuid";
@@ -31,13 +35,19 @@ export default async () => {
     schema,
     // https://youtu.be/7oLczJD6zZI
     formatError(error: GraphQLError) {
-      if (error.originalError instanceof ApolloError) {
+      // Expose all ApolloErrors to the user. These are considered "expected"
+      // errors.
+      if (error instanceof ApolloError) {
         return error;
       }
+
       const logger = Container.get("logger") as Logger;
 
       const errId = v4();
-      logger.error(error.message, { error, errId });
+      logger.error(`Internal server error "${errId}": ${error.message}`, {
+        error,
+        errId,
+      });
 
       return new GraphQLError(
         `Internal Error: ${errId}`,
