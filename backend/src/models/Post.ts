@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
-  JoinColumn,
+  RelationId,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
@@ -23,18 +23,18 @@ export default class Post {
   content: string;
 
   @Column()
+  @RelationId((post: Post) => post.author)
   authorId: string;
 
   @Field((type) => User)
   @ManyToOne((type) => User, { lazy: true })
-  @JoinColumn({ name: "authorId" })
   author: Lazy<User>;
 
   @Column()
+  @RelationId((post: Post) => post.prompt)
   promptId: string;
 
   @ManyToOne((type) => Prompt, { lazy: true })
-  @JoinColumn({ name: "promptId" })
   prompt: Lazy<Prompt>;
 
   @CreateDateColumn()

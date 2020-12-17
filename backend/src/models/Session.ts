@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, RelationId } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 import User from "./User";
 import { Lazy } from ".";
@@ -19,10 +19,10 @@ export default class Session {
   expires: Date;
 
   @Column()
+  @RelationId((session: Session) => session.user)
   userId: string;
 
   @Field((type) => User)
   @ManyToOne((type) => User, { lazy: true, onDelete: "CASCADE" })
-  @JoinColumn({ name: "userId" })
   user: Lazy<User>;
 }
