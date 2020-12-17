@@ -50,7 +50,10 @@ export default class Prompt {
   posts: Lazy<Post[]>;
 
   @Field((type) => [User])
-  @ManyToMany((type) => User, (user) => user.wins, { lazy: true })
+  @ManyToMany((type) => User, (user) => user.wins, {
+    lazy: true,
+    cascade: true,
+  })
   @JoinTable()
   winners: Lazy<User[]>;
 
