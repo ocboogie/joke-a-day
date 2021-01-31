@@ -13,6 +13,12 @@ import { Lazy } from ".";
 
 export const maxContentLength = 256;
 
+export enum Status {
+  Future,
+  Current,
+  Archived,
+}
+
 @ObjectType()
 @Entity()
 export default class Prompt {
@@ -58,10 +64,25 @@ export default class Prompt {
   winners: Lazy<User[]>;
 
   /**
-   * If the prompt is scheduled for today
+   * Denotes if the prompt has been processed and a winner or winners have been
+   * declared.
    */
-  public isCurrent(): boolean {
+  @Column({ default: false })
+  complete: boolean;
+
+  /**
+   * Get the status of this prompt, current, archived or future.
+   */
+  public getStatus(): Status {
     const today = Prompt.ScheduleDateFormat(new Date(Date.now()));
-    return this.scheduled === today;
+    // This is doing string comparing but still works because of the format
+    // the dates are in.
+    if (this.scheduled > today) {
+      return Status.Future;
+    } else if (this.scheduled < today) {
+      return Status.Archived;
+    } else {
+      return Status.Current;
+    }
   }
 }

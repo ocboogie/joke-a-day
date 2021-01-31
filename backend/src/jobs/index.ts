@@ -1,1 +1,1 @@
-import "./finishRound.ts";
+import "./finishUncompleteRounds";

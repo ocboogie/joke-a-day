@@ -18,6 +18,7 @@ import Vote from "../models/Vote";
 import RoundManagement from "../services/roundManagement";
 import { ForbiddenError } from "apollo-server";
 import { Logger } from "winston";
+import { Status } from "../models/Prompt";
 
 @Resolver((of) => Post)
 export default class {
@@ -45,7 +46,7 @@ export default class {
       // FIXME:
       throw new Error("Prompt not found");
     }
-    if (!prompt.isCurrent()) {
+    if (prompt.getStatus() != Status.Current) {
       // FIXME:
       throw new Error("Prompt is not active");
     }

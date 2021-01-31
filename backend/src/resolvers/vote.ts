@@ -5,6 +5,7 @@ import { Resolver, Mutation, Arg, PubSub, Publisher } from "type-graphql";
 import User from "../models/User";
 import { CurrentUser } from "../decorators/auth";
 import Vote from "../models/Vote";
+import { Status } from "../models/Prompt";
 
 @Resolver((of) => Post)
 export default class {
@@ -24,7 +25,7 @@ export default class {
       // FIXME:
       throw new Error("Post not found");
     }
-    if (!(await post.prompt).isCurrent()) {
+    if ((await post.prompt).getStatus() != Status.Current) {
       // FIXME:
       throw new Error("Prompt is not active");
     }
@@ -74,7 +75,7 @@ export default class {
       // FIXME:
       throw new Error("Post not found");
     }
-    if (!(await post.prompt).isCurrent()) {
+    if ((await post.prompt).getStatus() != Status.Current) {
       // FIXME:
       throw new Error("Prompt is not active");
     }

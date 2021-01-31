@@ -13,15 +13,17 @@ import Prompt from "../models/Prompt";
 import PromptRepo from "../customRepos/Prompt";
 import { PromptInfo } from "../types/prompt";
 import Post from "../models/Post";
-import { finishRound } from "../queues";
 import { Logger } from "winston";
+import { finishUncompleteRounds } from "../queues";
+import RoundManagement from "../services/roundManagement";
 
 @Resolver((of) => Prompt)
 export default class {
   constructor(
     @InjectRepository(PromptRepo)
     private readonly promptRepository: PromptRepo,
-    @Inject("logger") private logger: Logger
+    @Inject("logger") private logger: Logger,
+    private readonly roundManagement: RoundManagement
   ) {}
 
   @Admin()
@@ -49,11 +51,25 @@ export default class {
     return this.promptRepository.findCurrent();
   }
 
+  @Mutation((returns) => Prompt)
+  @Admin()
+  async manuallyFinishRound(@Arg("id") id: string): Promise<Prompt> {
+    const prompt = await this.promptRepository.findOne(id);
+    if (!prompt) {
+      // FIXME:
+      throw "Prompt not found";
+    }
+
+    this.roundManagement.finishRound(prompt);
+
+    return prompt;
+  }
+
   @Mutation((returns) => Boolean)
   @Admin()
-  async manuallyFinishRound(): Promise<true> {
-    const currentPrompt = await this.promptRepository.findCurrent();
-    finishRound.add(currentPrompt || null);
+  async triggerFinishUncompleteRounds(): Promise<true> {
+    finishUncompleteRounds.add(null);
+
     return true;
   }
 

@@ -28,11 +28,8 @@ export default class RoundManagement {
   }
 
   /**
-   * This will compute the winners of this round, save them in the db
-   * and email them.
-   *
-   * @remarks this is a pretty heavy funciton and should only been used in a
-   * queue
+   * This will compute the winners of this round, save them in the db,
+   * email them, and mark the prompt as complete.
    *
    * @param prompt the prompt to finish
    */
@@ -53,6 +50,7 @@ export default class RoundManagement {
         console.error(err);
       }
     }
+    prompt.complete = true;
 
     await this.promptRepository.save(prompt);
   }
@@ -62,8 +60,6 @@ export default class RoundManagement {
    * return one user but if there are multiple posts tied for first then this
    * returns an array of users.
    *
-   * @remarks this is a pretty heavy funciton and should only been used in a
-   * queue
    * @returns the winner(s) of this prompt and undefied if there aren't any posts
    */
   public async computeWinners(prompt: Prompt) {

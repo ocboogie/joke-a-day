@@ -1,5 +1,5 @@
-import { finishRound } from "../queues";
+import { finishUncompleteRounds } from "../queues";
 
 export default () => {
-  finishRound.add(null, { repeat: { cron: "1 0 * * *" } });
+  finishUncompleteRounds.add(null, { repeat: { cron: "1 0 * * *" } });
 };

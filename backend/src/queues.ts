@@ -1,5 +1,4 @@
 import Queue from "bull";
-import Prompt from "./models/Prompt";
 import config from "./config";
 
 const queueConfig = {
@@ -9,4 +8,7 @@ const queueConfig = {
   },
 };
 
-export const finishRound = new Queue<Prompt | null>("finishRound", queueConfig);
+export const finishUncompleteRounds = new Queue<null>(
+  "finishUncompleteRounds",
+  queueConfig
+);
