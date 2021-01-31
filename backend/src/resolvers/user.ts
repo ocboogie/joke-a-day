@@ -1,15 +1,14 @@
 import { Arg, Query, Resolver, Mutation, Ctx } from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository } from "typeorm";
-import {
-  ForbiddenError,
-  AuthenticationError,
-  UserInputError,
-} from "apollo-server";
+import { ForbiddenError, UserInputError } from "apollo-server";
 import { Response } from "express";
 import { Context } from "../initialization/configureGraphqlServer";
 import { CurrentUser } from "../decorators/auth";
-import AuthService, { EmailInUseError } from "../services/auth";
+import AuthService, {
+  EmailInUseError,
+  AuthenticationError,
+} from "../services/auth";
 import { UserInfo, UserLogin, LoginResult } from "../types/user";
 import Session from "../models/Session";
 import User from "../models/User";
@@ -77,8 +76,10 @@ export default class {
         sessionId,
       };
     } catch (err) {
-      // FIXME: Use a better error
-      throw new AuthenticationError("Login failed");
+      if (err instanceof AuthenticationError) {
+        throw new UserInputError("Invalid credentials");
+      }
+      throw err;
     }
   }
 
