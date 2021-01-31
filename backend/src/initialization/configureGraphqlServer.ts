@@ -37,8 +37,8 @@ export default async () => {
     formatError(error: GraphQLError) {
       // Expose all ApolloErrors to the user. These are considered "expected"
       // errors.
-      if (error instanceof ApolloError) {
-        return error;
+      if (error.originalError instanceof ApolloError) {
+        return error.originalError;
       }
 
       const logger = Container.get("logger") as Logger;
